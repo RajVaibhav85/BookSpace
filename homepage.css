@@ -1,0 +1,40 @@
+.top-bar {
+    display: flex;
+    height: 50px;
+    background-color: #4f3131;
+}
+
+.header {
+    display: flex;
+}
+
+.img-logo {
+    margin-top: 7px;
+    margin-right: 5px;
+    width: 36px;
+    height: 36px;
+    border-radius: 18px;
+    
+}
+
+.search-icon {
+    width: 36px;
+    height: 36px;
+    margin-left: 10px;
+    margin-right: 5px;
+    margin-top: 5px;
+}
+
+.search-bar {
+    display: inline-flex;
+    align-items: center;
+
+    padding: 5px;
+    margin-left: 5px;
+    height: 30px;
+
+    border: solid ;
+    border-color: black;
+    border-width: 1px;
+    border-radius: 30px;
+}
