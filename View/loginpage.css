@@ -1,0 +1,62 @@
+*{
+    user-select: none;
+    margin: 0px;
+    border: 0px;
+    padding: 0px;
+}
+.LoginBody{
+    height: 100vh;
+    width: 100vw;
+    background-color:  rgba(0, 0, 0, 0.867);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.TopBar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    height: 60px;
+    padding: 0 20px;
+
+    background-color: rgb(28, 27, 26);
+    color: aliceblue;
+
+    transition: box-shadow 0.3s ease;
+}
+.LoginBox{
+    border-radius: 5px;
+}
+.LoginContainer{
+  background-color:  rgba(24, 22, 20, 0.585);
+  height: 15rem;
+  width: 20rem;
+  display: flex;
+  flex-direction: column;
+  color: aliceblue;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  border-radius: 15px;
+  row-gap: 5px;
+  font-size: larger;
+}
+.LoginTextFieldsGrid{
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    row-gap: 5px;
+}
+.LoginButtonsBox{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    column-gap: 5px;
+    padding-top: 15px;
+}
+.LoginButton{
+    padding: 2px;
+    font-size: larger;
+    border-radius: 5px;
+}
