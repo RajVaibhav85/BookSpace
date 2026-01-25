@@ -3,7 +3,10 @@ const canvas = document.getElementById("stars");
 const ctx = canvas.getContext("2d");  
 ctx.fillStyle = "red";
 ctx.fillRect(50, 50, 150, 150);
-
+let isDarkTheme = true;
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 function resizeCanvas() {
   canvas.width = window.innerWidth;
@@ -23,7 +26,7 @@ function createComet() {
     x: Math.random() * canvas.width,
     y: 0,
     size: Math.random() * 3 + 2,
-    length: Math.random() * 120 + 60,
+    length: Math.random() * 120 + 40,
     speed: Math.random() * 0.4 + 2
   });
 }
@@ -41,26 +44,25 @@ for (let i = 0; i < StarCount; i++) {
         y: Math.random() * canvas.height,
         radius:Math.random() * 1.5,
         count:0,
-        visible:true
+        visible:true,
+
     });
     
 }
 function drawComet(comet) {
-  // comet tail
+  // tail
   ctx.beginPath();
   ctx.moveTo(comet.x, comet.y);
   ctx.lineTo(comet.x - comet.length, comet.y - comet.length);
   ctx.strokeStyle = "white";
   ctx.lineWidth = 1;
   ctx.stroke();
-
-  // comet head
+  //head
   ctx.beginPath();
   ctx.arc(comet.x, comet.y, comet.size, 0, Math.PI * 2);
   ctx.fillStyle = "white";
   ctx.fill();
-
-  // comet glow (optional)
+  //glow
   ctx.beginPath();
   ctx.arc(comet.x, comet.y, comet.size * (Math.random() +3), 0, Math.PI * 2);
   ctx.fillStyle = "rgba(255, 255, 255, 0.15)";
@@ -69,7 +71,7 @@ function drawComet(comet) {
 
 function animatingStar(){
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "white";
+    ctx.fillStyle = "lightblue";
     //twinkling stars
     starsStay.forEach(star=>{
         if(Math.random()>0.5){
@@ -86,6 +88,7 @@ function animatingStar(){
         if(star.count>1000){
             star.count = 0;
             star.visible = !star.visible;
+            
         }
         star.count+=10;
     });
@@ -119,8 +122,76 @@ function animatingStar(){
             comet.y = 0;
         }
    });
-
+   
+   if(isDarkTheme){
+    constellation()
     requestAnimationFrame(animatingStar);
+    }
+   
+}
+animatingStar();
+
+function constellation(){
+    const stars = [
+        { x: 220, y: 280 },//corner one
+        { x: 220, y: 200 }, 
+        { x: 260, y: 220 }, 
+        { x: 260, y: 260 }, //corner tail
+        { x: 220, y: 280 }, 
+        { x: 180, y: 300 }, 
+        { x: 140, y: 320 }, 
+        { x: 100, y: 330 }, 
+    ];
+    for(let i=0;i<stars.length;i++){
+        const star = stars[i];
+        ctx.beginPath();
+        ctx.arc(star.x , star.y, 2, 0, Math.PI * 2); // radius = 2
+        ctx.fillStyle = "white";
+        ctx.fill();
+        ctx.beginPath();
+        ctx.strokeStyle = "rgba(255,255,255,0.4)";
+        ctx.lineWidth = 1;
+
+    for (let i = 0; i < stars.length; i++) {
+        const star = stars[i];
+        i === 0 ? ctx.moveTo(star.x, star.y) : ctx.lineTo(star.x, star.y);
+    }
+    ctx.stroke();
+    }
 }
 
-animatingStar();
+async function CanvasClean() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);   
+    await delay(100);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);   
+}
+
+async function ToChangeTheme(){
+    if(isDarkTheme){
+        for(let i=0;i<150;i++){
+            starsStay.forEach(star=>{
+                star.radius+=2
+            })
+            await delay(100)
+        }
+        ctx.clearRect(0, 0, canvas.width, canvas.height);   
+        await delay(500);
+        CanvasClean()
+        document.getElementsByClassName("LoginBody")[0].style.backgroundColor="lightblue"
+        document.getElementsByClassName("TopBar")[0].style.backgroundColor="lightblue"
+        isDarkTheme = false;
+        for(let i=0;i<150;i++){
+            starsStay.forEach(star=>{
+                star.radius-=2
+            })
+        }
+    }else{
+        document.getElementsByClassName("LoginBody")[0].style.backgroundColor="black"
+        document.getElementsByClassName("TopBar")[0].style.backgroundColor="black"
+        isDarkTheme = true
+        animatingStar();
+    }
+}
+
+document.getElementsByClassName("theme-icon")[0].addEventListener("click",ToChangeTheme);
+//when u take class make sure it is [0] coz it returns list of elements

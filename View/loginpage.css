@@ -3,6 +3,7 @@
     margin: 0px;
     border: 0px;
     padding: 0px;
+    z-index: 1;
 }
 canvas {
   position: fixed;
@@ -21,6 +22,7 @@ canvas {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    z-index: -1;
 }
 .TopBar{
     display: flex;
@@ -51,6 +53,7 @@ canvas {
   border-radius: 15px;
   row-gap: 5px;
   font-size: larger;
+  z-index: 2 ;
 }
 .LoginTextFieldsGrid{
     display: grid;
@@ -68,4 +71,48 @@ canvas {
     padding: 2px;
     font-size: larger;
     border-radius: 5px;
+}
+.img-logo {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+.title-text {
+  font-size: 22px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+.header{
+    display: flex;
+    flex-direction: row;
+}
+.title-text{
+    padding-top: 0.7rem;
+}
+.top-bar_button_container {
+  display: flex;
+  align-items: center;
+}
+.types {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.top-bar_button {
+  background: transparent;
+  color: white;
+  border: none;
+  outline: none;
+  font-size: 18px;
+  cursor: pointer;
+
+  transition: opacity 0.2s ease;
+}
+.top-bar_button:hover {
+  opacity: 0.5;
+}
+.theme-icon{
+    height: 50px;
+    width: 50px;
 }
