@@ -1,60 +1,67 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
+  <head>
     <link rel="stylesheet" href="homepage.css" />
     <link rel="icon" href="Images/logo.jpg" />
     <title>Book Space</title>
-</head>
+  </head>
 
-<body>
+  <body>
     <div class="top-bar">
-        
-        <div class="header">
-            <img src="images/logo.jpg" class="img-logo" alt="logo"/>
-            <p class="title-text">Book Space</p>
-        </div>
+      <div class="header">
+        <img src="images/logo.jpg" class="img-logo" alt="logo" />
+        <p class="title-text">Book Space</p>
+      </div>
 
-        <div class="top-bar_button_container">
-            <div class="types">
-                <button class="top-bar_button">Manga</button>
-                <button class="top-bar_button">Manhwa</button>
-                <button class="top-bar_button">Light Novels</button>
-                <button class="top-bar_button">Comics</button>
-                <button class="top-bar_button">
-                    <img src="images/menu.png" class="menu-icon" alt="menu"/>
-                </button>
-            </div>
+      <div class="top-bar_button_container">
+        <div class="types">
+          <button class="top-bar_button">Manga</button>
+          <button class="top-bar_button">Manhwa</button>
+          <button class="top-bar_button">Light Novels</button>
+          <button class="top-bar_button">Comics</button>
+          <button class="top-bar_button">
+            <img src="images/menu.png" class="menu-icon" alt="menu" />
+          </button>
         </div>
+      </div>
     </div>
 
     <div id="star-bg">
-        <div class="content">
-            <div class="search-container">
-                <img src="images/search.png" alt="search"/>
-                <input type="text" class="search-bar" placeholder="Search Manga..."/>
-            </div>
-    
-            <div>
-                <h3>Top Searches:</h3>
-                <div class="scrolable" id="top-searched1">
-                </div>
-            </div>
-    
-            <div>
-                <h3>Library:</h3>
-                <div class="scrolable" id="top-searched2">
-                </div>
-            </div>
-    
-            <div>
-                <h3>Upcomming:</h3>
-                <div class="scrolable" id="top-searched3">
-                </div>
-            </div>
+      <div class="content">
+        <div class="intro-section">
+          <div class="search-container">
+            <img src="images/search.png" alt="search" />
+            <input
+              type="text"
+              class="search-bar"
+              placeholder="Search Manga..."
+            />
+          </div>
+          <p class="description">
+            Welcome to Book Space, your ultimate destination for manga, manhwa,
+            light novels, and comics! Dive into a world of captivating stories
+            and stunning artwork. Explore our extensive library, discover new
+            favorites, and stay updated with the latest releases. Happy reading!
+          </p>
         </div>
+
+        <div>
+          <h3>Top Searches:</h3>
+          <div class="card-container" id="top-searched-1"></div>
+        </div>
+
+        <div>
+          <h3>Library:</h3>
+          <div class="card-container" id="top-searched-2"></div>
+        </div>
+
+        <div>
+          <h3>Upcomming:</h3>
+          <div class="card-container" id="top-searched-3"></div>
+        </div>
+      </div>
     </div>
 
-
     <script src="homepage.js"></script>
-</body>
+  </body>
 </html>

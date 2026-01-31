@@ -1,19 +1,15 @@
-card = {
-    image: 'Images/sasuke.jpg',
-    title: 'Sample Manga Title'
-}
-
 function populate() {
-    for(let j = 1 ; j <= 3 ; j++){
-        const topSearched = document.getElementById(`top-searched${j}`);
-        for(let i = 0; i < 10; i++) {
-        const html = `<img src="${card.image}" alt="${card.title}">${card.title}</div>`;
-    
-        const cardElement = document.createElement('div');
-        cardElement.className = 'card';
-    
-        cardElement.innerHTML = html;
-        topSearched.appendChild(cardElement);
+    for (let j = 1; j <= 3; j++) {
+        const container = document.getElementById(`top-searched-${j}`);
+        for(let i = 1 ; i <= 16 ; i++) {
+            let html = `
+            <div class="card">
+            <img src="Images/tmp/game_image${i}.jpg" alt="cover" />
+            <div class="card-info">
+                <p class="card-title">Sample Title ${i}</p>
+            </div>
+            `;
+            container.innerHTML += html;
         }
     }
 }
