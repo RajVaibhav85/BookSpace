@@ -1,62 +1,143 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <link href="loginpage.css" rel="stylesheet" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-        <title>BookSpace</title>
-    </head>
-    <body>
-        <canvas id="stars"></canvas>
-        <div class="TopBar">
-            <div class="header">
-                <img src="Images/logo.jpg" class="img-logo" alt="logo"/>
-                <p class="title-text">Book Space</p>
-            </div>
-            <div class="top-bar_button_container">
-                <div class="types">
-                    <button class="top-bar_button">
-                        <img src="Images/SunThemeIcon.png" class="theme-icon" alt="menu"/>
-                    </button>
-                    <button class="top-bar_button">Manga</button>
-                    <button class="top-bar_button">Manhwa</button>
-                    <button class="top-bar_button">Light Novels</button>
-                    <button class="top-bar_button">Comics</button>
-                    <button class="top-bar_button">
-                    <img src="Images/menu.png" class="menu-icon" alt="menu"/>
-                    </button>
-                </div>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="loginpage.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <title>BookSpace</title>
+</head>
+<body>
+    <canvas id="stars"></canvas>
+
+    <div class="TopBar">
+        <div class="header">
+            <img src="Images/logo.jpg" class="img-logo" alt="Book Space Logo">
+            <p class="title-text">Book Space</p>
+        </div>
+
+        <div class="top-bar_button_container">
+            <div class="types">
+                <button class="top-bar_button">
+                    <img src="Images/SunThemeIcon.png" class="theme-icon" alt="Theme">
+                </button>
+                <button class="top-bar_button">Manga</button>
+                <button class="top-bar_button">Manhwa</button>
+                <button class="top-bar_button">Light Novels</button>
+                <button class="top-bar_button">Comics</button>
+                <button class="top-bar_button">
+                    <img src="Images/menu.png" class="menu-icon" alt="Menu">
+                </button>
             </div>
         </div>
+    </div>
+
+    <div class="LoginBody">
+        <div class="LoginContainer">
+            <h1 id="MainHead">Login</h1>
+
+            <div class="LoginTextFieldsGrid">
+                <i class="fa-solid fa-user"></i>
+                <input class="Textfielder"type="text" placeholder="Username">
+
+                <i class="fa-solid fa-lock"></i>
+                <input class="Textfielder" type="password" placeholder="Password">
+            </div>
+
+            <div id="LoginBdyButton">
+                <button class="LoginButton">Register</button>
+                <button class="LoginButton">Login</button>
+            </div>
+        </div>
+
+        <p class="description">
+            Welcome to Book Space, your ultimate destination for manga, manhwa
+            and stunning artwork. Explore our extensive library, discover new
+            favorites, and stay updated with the latest releases. Happy reading!
+            Light novels and comics! Dive into a world of captivating stories.
+            <p class="description"> 
+                Scroll More 
+            </p>
+        </p>
+
         
-        <div class="LoginBody">  
-            <div class = "LoginContainer">
-                <h1 id="MainHead">Login</h1>
-                <div class="LoginTextFieldsGrid">
-                    <i class="fa-solid fa-user"></i>
-                    <input type="text" placeholder="Username">
-                    <i class="fa-solid fa-lock"></i>
-                    <input type="text" placeholder="Password">
-                </div>
-                <p class="description">
-                    Welcome to Book Space, your ultimate destination for manga, manhwa
-                    light novels, and comics! Dive into a world of captivating stories
-                    and stunning artwork. Explore our extensive library, discover new
-                    favorites, and stay updated with the latest releases. Happy reading!
-                </p> 
+    </div>
+    <div id="Scroll_Page">
+        <div class="IntroCard">
+            <div class="IntroImgCard">
+                <img id="IntroImages" src="Images/Intro_Manga_Image.png" alt="" sizes="10px">
             </div>
-            <div id="Scroll_Page">
-                <img src="">
+            <div class="IntroDesCard">
+                <p>
+                    Manga is a style of Japanese comics known for its expressive art and deep storytelling.
+                    It covers every genre—from action and fantasy to romance and slice of life.
+                    Read right to left, manga often builds rich worlds and emotional characters.
+                    For many, it’s not just reading—it’s an experience.
+                </p>
+                <p class="IntroQoute">
+                    “It’s not about whether I can or not.
+                    I’m gonna do it because I want to.”
+                    <p>
+                        -Monkey D. Luffy <br>(One Piece by Eiichiro Oda)
+                    </p>
+                </p>
             </div>
-<<<<<<< HEAD
-=======
-
-             <div class="Introduction">
-                <p>Starting here</p>
-            </div>
-
->>>>>>> 18a9dd4 (Random Changes)
         </div>
-           
-        <script src="loginpage.js"></script>
-    </body>
+        <div class="IntroCard">
+            <div class="IntroImgCard">
+                <img id="IntroImages" src="Images/Intro_Manhwa_Images.png" alt="" sizes="10px">
+            </div>
+            <div class="IntroDesCard">
+                <p>
+                    Manhwa is Korean comics known for their clean art, full color pages, and vertical scroll format.
+                    They often feature strong storytelling in genres like action, fantasy, romance, and reincarnation.
+                    Most are made for digital reading
+                </p>
+                <p class="IntroQoute">
+                   "I remembered the first time I was about to finish a book. It was like being deprived of the world."
+                    <p>
+                        - Kim Dokja <br>(Omniscient Reader's Viewpoint by Sing Shong)
+                    </p>
+                </p>
+            </div>
+        </div>
+        <div class="IntroCard">
+            <div class="IntroImgCard">
+                <img id="IntroImages" src="Images/Intro_LN_Image.png" alt="" sizes="10px">
+            </div>
+            <div class="IntroDesCard">
+                <p>
+                    A light novel is a Japanese style of short novel aimed mainly at young adults.
+                    It usually includes anime-style illustrations and is written in simple, fast-paced language.
+                    Most light novels focus on genres like fantasy, adventure, romance , and school life.
+                </p>
+                <p class="IntroQoute">
+                   "Phew, looks like I’ve managed to trick another person into becoming a member. No, I’ve managed to recruit another member…"
+                    <p>
+                        - Klein Moretti <br>( Lord of Mysteries by  Yuan Ye)
+                    </p>
+                </p>
+            </div>
+        </div>
+        <div class="IntroCard">
+            <div class="IntroImgCard">
+                <img id="IntroImages" src="Images/image.png" alt="" sizes="10px">
+            </div>
+            <div class="IntroDesCard">
+                <p>
+                   Comics are a visual storytelling medium that combines illustrations and text to convey a narrative.
+                    They can range from superhero adventures to slice-of-life stories, often serialized in magazines or books.
+                    Comics use panels, speech bubbles, and sequential art to bring characters and worlds to life.
+                </p>
+                <p class="IntroQoute">
+                   "Whatever comes our way, whatever battle we have raging inside us, we always have a choice."
+                    <p>
+                        - Peter Parker <br>( SpiderMan by Stan Lee)
+                    </p>
+                </p>
+            </div>
+        </div>
+    </div>
+    <script src="loginpage.js"></script>
+</body>
 </html>
