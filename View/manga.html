@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<head>
+  <link rel="stylesheet" href="manga.css">
+</head>
+<body>
+  <div id="bg"></div>
+
+  <div class="top-bar">
+    <div class="header">
+      <img src="Images/logo.jpg" class="img-logo" alt="logo" />
+      <p class="title-text contrast">Book Space</p>
+    </div>
+
+    <div class="top-bar_button_container ">
+      <div class="types">
+        <button class="top-bar_button">Manga</button>
+        <button class="top-bar_button">Manhwa</button>
+        <button class="top-bar_button">Light Novels</button>
+        <button class="top-bar_button">Comics</button>
+        <button class="top-bar_button">
+          <img src="Images/menu.png" class="menu-icon" alt="menu" />
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="intro-section">
+          <div class="search-container">
+            <img src="Images/search.png" alt="search" />
+            <input
+              type="text"
+              class="search-bar"
+              placeholder="Search Manga..."
+            />
+          </div>
+          <p class="description">
+            Welcome to Book Space, your ultimate destination for manga, manhwa,
+            light novels, and comics! Dive into a world of captivating stories
+            and stunning artwork. Explore our extensive library, discover new
+            favorites, and stay updated with the latest releases. Happy reading!
+          </p>
+        </div>
+
+        <div>
+          <h3>Top Searches:</h3>
+          <div class="card-container" id="top-searched-1"></div>
+        </div>
+
+        <div>
+          <h3>Library:</h3>
+          <div class="card-container" id="top-searched-2"></div>
+        </div>
+
+        <div>
+          <h3>Upcomming:</h3>
+          <div class="card-container" id="top-searched-3"></div>
+        </div>
+  </div>
+
+  <script src="manga.js">
+  </script>
+</body>

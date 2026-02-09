@@ -1,21 +1,35 @@
-html {
-  background-attachment: fixed;
-  background: linear-gradient(160deg, #000000 0%, #2a0a40 45%, #0b1c3d 100%);
-  overflow-x: hidden;
-  overflow-y: hidden;
+body{
+    margin: 0px;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-body {
-  min-height: 100vh;
-  margin: 0;
-  background: transparent;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+.top-bar img{
+  mix-blend-mode: normal;
+}
+
+.top-bar ,
+.top-bar label,
+.content p,
+.content h3,
+.content label,
+.search-container
+{
+  color: white;
+  mix-blend-mode: difference;
+}
+
+
+#bg{
+  position: fixed;
+  inset: 0;
+    --angle:180deg;
+    background: linear-gradient(var(--angle),rgba(255, 255, 255, 1) 49.9%, rgba(3, 0, 0, 1) 50.1%);
+    color: #ffffff;
 }
 
 .top-bar {
   position: sticky;
   top: 0;
-  z-index: 3;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -23,7 +37,6 @@ body {
   height: 60px;
   padding: 0 20px;
 
-  background: transparent;
   color: rgb(255, 255, 255);
 
   transition: box-shadow 0.3s ease;
@@ -184,7 +197,7 @@ body {
   cursor: pointer;
   
   background: transparent;
-   transition: transform 0.25s ease;
+  transition: transform 0.25s ease;
 }
 
 .card img {
@@ -211,37 +224,32 @@ body {
   pointer-events: none;
 }
 
-.star-bg {
+.shuriken {
   position: fixed;
-  inset: 0;
-  z-index: -1;
-  /* pointer-events: none; */
-  overflow: hidden;
-}
+  pointer-events: auto;
+  user-select: none;
+  z-index: 2;
+  color: white;
+  mix-blend-mode: difference;
 
-.star {
-  position: absolute;
-  cursor: default;
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.8);
   opacity: 0;
-  text-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
-
-  animation: starFloat 3s linear forwards;
+  animation: shurikenLife linear forwards;
 }
 
-@keyframes starFloat {
+@keyframes shurikenLife {
   0% {
-    transform: translateY(20px) scale(0.8);
     opacity: 0;
+    transform: scale(0.6) rotate(0deg);
   }
-
-  20% {
+  15% {
     opacity: 1;
   }
-
+  80% {
+    opacity: 1;
+  }
   100% {
-    transform: translateY(-120px) scale(1);
     opacity: 0;
+    transform: scale(0.9) rotate(360deg);
   }
 }
+
