@@ -195,3 +195,41 @@ async function ToChangeTheme(){
 
 document.getElementsByClassName("theme-icon")[0].addEventListener("click",ToChangeTheme);
 //when u take class make sure it is [0] coz it returns list of elements
+
+
+//-------------------------------------------SWITCH BETWEEN REGISTRATION N LOGIN -----------------------------------
+
+let havacc= true;
+
+const loginButton = document.getElementsByClassName("LoginButton")[1];
+const regisButton = document.getElementsByClassName("LoginButton")[0];
+const LoginBoxhead = document.getElementById("MainHead")
+const RegisterTextFieldsGrid = document.getElementsByClassName("RegisterTextFieldsGrid")[0];
+const LoginTextFieldsGrid = document.getElementsByClassName("LoginTextFieldsGrid")[0];
+loginButton.addEventListener("click",()=>{
+    if(!havacc){
+        // Register the user
+
+    }else{
+        //Login
+        console.log("doe")
+        window.location.href ="homepage.html";
+    }
+})
+regisButton.addEventListener("click",()=>{
+    if(havacc){
+        LoginBoxhead.textContent ="Register"
+        loginButton.textContent ="Register"
+        regisButton.textContent = "Back "
+        LoginTextFieldsGrid.style.display = "none";
+        RegisterTextFieldsGrid.style.display = "grid";
+    }
+    else{
+        LoginBoxhead.textContent ="Login"
+        loginButton.textContent = "Login"
+        regisButton.textContent = "Register"
+        LoginTextFieldsGrid.style.display = "grid";
+        RegisterTextFieldsGrid.style.display = "none";
+    }
+     havacc = !havacc;
+})
