@@ -2,6 +2,8 @@
 <head>
     <title>BookSpace - Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/CSS/loginpage.css" rel="stylesheet">
+    
     <style>
         :root{
             --bg-gradient: linear-gradient(160deg, #000000 0%, #2a0a40 45%, #0b1c3d 100%);
@@ -119,35 +121,12 @@
     </style>
 </head>
 <body>
+    <canvas id="stars"></canvas>
     <div id="container">
-        <!-- <h1>Login to BookSpace</h1>
-        <form action="/login" method="post">
-            <label for="username">Username</label><br>
-            <input type="text" id="username" name="username" required><br><br>
-            <label for="password">Password</label><br>
-            <input type="password" id="password" name="password" required><br><br>
-            <div style="display: flex; gap: 20px;">
-                <input type="button" value="Register" onclick="location.href='/register'">
-                <input type="button" value="Login">
-            </div>
-        </form> -->
-
-        <!-- <h1>Register to BookSpace</h1>
-        <form action="/register" method="post">
-            <label for="username">Username</label><br>
-            <input type="text" id="username" name="username" required><br><br>
-            <label for="email">Email</label><br>
-            <input type="text" id="email" name="email" required><br><br>
-            <label for="password">Password</label><br>
-            <input type="password" id="password" name="password" required><br><br>
-            <div style="display: flex; gap: 20px;">
-                <input type="button" value="Register" onclick="showRegister()">
-                <input type="button" value="Login" onclick="showLogin()">
-            </div>
-        </form> -->
-
+        <!-- some code is moved to dumpyard1.txt as dump1-->
     </div>
-    <script>
+    <!-- make page scrollable n also add cards ( copy past frm view/loginpage.html)  u can it looked nice for me-->
+    <script src="/JS/loginpage.js">
         const container = document.getElementById('container');
 
         function showLogin() {
@@ -185,5 +164,7 @@
         }
 
         showLogin();
+        
     </script>
+    
 </body>
