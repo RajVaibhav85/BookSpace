@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<head>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
+    
+      .scene {
+        position: fixed;
+        inset: 0;
+        overflow: hidden;
+      }
+    
+      .gyro-img {
+        position: absolute;
+        inset: -5%;             /* image larger than screen */
+        background: url("manga_panel.png") center / cover no-repeat;
+        will-change: transform;
+      }
+    </style>
+</head>
+
+<body>
+    <div class="scene">
+      <div class="gyro-img" id="gyro"></div>
+    </div>
+    
+    <script>
+      // let t = 0;
+      // const gyro = document.getElementById("gyro");
+    
+      // function animate() {
+      //   t += 0.005;
+    
+      //   const x = Math.sin(t) * 20;
+      //   const y = Math.cos(t * 0.8) * 15;
+    
+      //   gyro.style.transform = `translate(${x}px, ${y}px) scale(1.05)`;
+      //   requestAnimationFrame(animate);
+      // }
+    
+      // animate();
+
+
+
+//       const gyro = document.getElementById("gyro");
+
+// let targetX = 0;
+// let targetY = 0;
+
+// let currentX = 0;
+// let currentY = 0;
+
+// const ease = 0.08;
+
+// /* Capture mouse position */
+// document.addEventListener("mousemove", e => {
+//   targetX = (e.clientX / window.innerWidth - 0.5) * 30;
+//   targetY = (e.clientY / window.innerHeight - 0.5) * 30;
+// });
+
+// /* Smooth follow */
+// function smooth() {
+//   currentX += (targetX - currentX) * ease;
+//   currentY += (targetY - currentY) * ease;
+
+//   gyro.style.transform =
+//     `translate(${-currentX}px, ${-currentY}px) scale(1.05)`;
+
+//   requestAnimationFrame(smooth);
+// }
+
+// smooth();
+
+
+
+let drift = 0;
+let mx = 0, my = 0;
+
+function animate() {
+  drift += 0.003;
+
+  const dx = Math.sin(drift) * 10;
+  const dy = Math.cos(drift) * 8;
+
+  gyro.style.transform =
+    `translate(${dx + mx}px, ${dy + my}px) scale(1.07)`;
+
+  requestAnimationFrame(animate);
+}
+animate();
+
+
+
+    </script>
+</body>
+

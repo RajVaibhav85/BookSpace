@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<head>
+    <title>BookSpace</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root{
+            --bg-gradient: linear-gradient(160deg, #000000 0%, #2a0a40 45%, #0b1c3d 100%);
+            --bg-card:rgba(255, 255, 255, 0.03);
+            --bg-border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        @media(max-width: 768px){
+            .description{
+                font-size: 16px;
+                width: 75vw;
+            }
+            .search-container input {
+                min-width: 75vw;  
+                font-size: 16px;
+            }
+        }
+
+        html , body{
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        body{
+            color: white;
+            background: var(--bg-gradient);
+            background-repeat: no-repeat;
+            min-height: 100vh;
+        }
+
+        #top-bar{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        #top-bar p{ margin: 0;
+            font-size: 28px;
+        }
+
+        #content{
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        #content::-webkit-scrollbar {
+        width: 10px;
+        }
+
+        #content::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 20px;
+        }
+
+        #content::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255,255,255,0.1);
+        transition: 0.3s;
+        }
+
+        #content::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.35);
+        }
+
+        nav {
+        background: transparent;
+        padding: 15px 30px;
+        }
+
+        nav ul {
+        list-style: none;      
+        margin: 0;
+        padding: 0;
+        display: flex;         
+        gap: 20px;             
+        }
+
+        nav a {
+        text-decoration: none;
+        color: white;
+        font-weight: 500;
+        font-size: 20px;
+        transition: 0.3s;
+        }
+
+        nav a:hover {
+            opacity: 0.7;
+        }
+
+        .search-container-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-top: 50px;
+        }
+        .search-container{
+            padding-left: 10px;
+            background-color: var(--bg-card);
+            border-radius: 30px;
+            border: var(--bg-border);
+            display: flex;
+            transition: 60ms;
+        }
+        .search-container:hover{
+            background-color: rgba(255, 255, 255, 0.07);
+        }
+        .search-container input {
+            width: 50vw;
+            color: white;
+            height: 30px;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            font-size: 18px;
+        }
+
+        .search-container input:focus {
+            outline: none;
+        }
+
+        .search-container button { 
+            border: none;
+            cursor: pointer;
+            border-radius: 30px 0 0 30px;
+            background: transparent;
+        } 
+        .search-container img {
+            width: 20px;
+            height: 20px;
+        }
+
+        .description{
+            max-width: 600px;
+            text-align: center;
+            margin: 20px auto;
+            font-size: 18px;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+
+            list-style: none;
+            padding: 10px 0;
+            margin: 0;
+
+            background: var(--bg-card);
+            border: var(--bg-border);
+
+            border-radius: 8px;
+            min-width: 160px;
+
+            display: none;
+        }
+
+        .dropdown-menu li {
+            padding: 8px 15px;
+        }
+
+        .dropdown-menu a {
+            font-size: 16px;
+            display: block;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        #card-container{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .card{
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover{
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(255, 255, 255, 0.2);
+        }
+
+        #about{
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: var(--bg-card);
+            border: var(--bg-border);
+            border-radius: 12px;
+        }
+
+
+        
+
+
+    </style>
+</head>
+<body>
+    <div id="top-bar">
+        <div>
+            <p>BookSpace</p>
+        </div>
+        <nav id="nav-bar">
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/books">Books</a></li>
+                <li class="dropdown">
+            <a href="#">Genre</a>
+
+            <ul class="dropdown-menu">
+                <li><a href="#">Action</a></li>
+                <li><a href="#">Romance</a></li>
+                <li><a href="#">Fantasy</a></li>
+                <li><a href="#">Horror</a></li>
+                <li><a href="#">Sci-Fi</a></li>
+            </ul>
+        </li>
+
+                <li><a href="/about">About</a></li>
+                <li><a href="/profile">Profile</a></li>
+            </ul>
+        </nav>
+    </div>
+    <div id="content">
+        <div>
+            <div class="search-container-wrapper">
+                <div class="search-container">
+                    <button><img src="search-icon.png" alt="Search" id="search-icon"></button>
+                    <input type="text" placeholder="Search books..." />
+                </div>
+            </div>
+            <p class="description">
+            Welcome to Book Space, your ultimate destination for manga, manhwa,
+            light novels, and comics! Dive into a world of captivating stories
+            and stunning artwork. Explore our extensive library, discover new
+            favorites, and stay updated with the latest releases. Happy reading!
+          </p>
+        </div>
+        <div id="card-container">
+        </div>
+        <div id="about">
+            <h2>About BookSpace</h2>
+            <p>
+                BookSpace is a platform dedicated to providing readers with a vast collection of manga, manhwa, light novels, and comics. Our mission is to create a vibrant community where book lovers can discover new stories, share their thoughts, and connect with fellow readers. Whether you're looking for the latest releases or timeless classics, BookSpace has something for everyone. Join us on this literary journey and explore the endless possibilities of storytelling!
+            </p>
+        </div>
+    </div>
+</body>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<head>
+    <title>BookSpace - Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/CSS/loginpage.css" rel="stylesheet">
+    
+    <style>
+        :root{
+            --bg-gradient: linear-gradient(160deg, #000000 0%, #2a0a40 45%, #0b1c3d 100%);
+            --bg-card:rgba(255, 255, 255, 0.03);
+            --bg-border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        @media(max-width: 768px){
+            #container{
+                width: 90vw;
+                margin: 50px auto;
+            }
+        }
+
+        html , body{
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        body{
+            color: white;
+            background: var(--bg-gradient);
+            background-repeat: no-repeat;
+            min-height: 100vh;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #container{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            max-width: 60vw;
+            margin: 100px auto;
+            padding: 20px;
+            background: var(--bg-card);
+            border: var(--bg-border);
+            border-radius: 12px;
+        }
+
+        #container h1{
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        /*
+        #container input {
+            width: 50vw;
+            color: white;
+            height: 30px;
+            padding: 10px 15px;
+            border: var(--bg-border);
+            border-radius: 30px;
+            background: transparent;
+            font-size: 18px;
+        }
+
+        #container input:focus {
+            outline: none;
+        } */
+
+        #container form {
+            margin: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+
+        #container label {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        #container input[type="text"],
+        #container input[type="password"] {
+            width: 50vw;
+            color: white;
+            height: 30px;
+            padding: 10px 30px;
+            border: var(--bg-border);
+            border-radius: 30px;
+            background: transparent;
+            font-size: 18px;
+        }
+
+        #container input[type="text"]:focus,
+        #container input[type="password"]:focus {
+            outline: none;
+        }
+
+        #container input[type="button"],
+        #container input[type="submit"] {
+            width: 100px;
+            height: 35px;
+            border: none;
+            border-radius: 30px;
+            background-color: #ef476f;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+        #container input[type="button"]:hover {
+            opacity: 0.8;
+        }
+
+
+
+    </style>
+</head>
+<body>
+    <canvas id="stars"></canvas>
+    <div id="container">
+        <!-- some code is moved to dumpyard1.txt as dump1-->
+    </div>
+    <!-- make page scrollable n also add cards ( copy past frm view/loginpage.html)  u can it looked nice for me-->
+    <script src="/JS/loginpage.js">
+        const container = document.getElementById('container');
+
+        function showLogin() {
+            container.innerHTML = `
+                <h1>Login to BookSpace</h1>
+                <form action="/login" method="post">
+                    <label for="username">Username</label><br>
+                    <input type="text" id="username" name="username" required><br><br>
+                    <label for="password">Password</label><br>
+                    <input type="password" id="password" name="password" required><br><br>
+                    <div style="display: flex; gap: 20px;">
+                        <input type="button" value="Register" onclick="showRegister()">
+                        <input type="button" value="Login">
+                    </div>
+                </form>
+            `;
+        }
+
+        function showRegister() {
+            container.innerHTML = `
+                <h1>Register to BookSpace</h1>
+                <form action="/register" method="post">
+                    <label for="username">Username</label><br>
+                    <input type="text" id="username" name="username" required><br><br>
+                    <label for="email">Email</label><br>
+                    <input type="text" id="email" name="email" required><br><br>
+                    <label for="password">Password</label><br>
+                    <input type="password" id="password" name="password" required><br><br>
+                    <div style="display: flex; gap: 20px;">
+                        <input type="button" value="Register">
+                        <input type="button" value="Login" onclick="showLogin()">
+                    </div>
+                </form>
+            `;
+        }
+
+        showLogin();
+        
+    </script>
+    
+</body>

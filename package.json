@@ -1,0 +1,17 @@
+{
+  "name": "bookspace",
+  "version": "1.0.0",
+  "description": "Web based books reading application",
+  "main": "index.js",
+  "scripts": {
+    "start": "node Control/server.js",
+    "dev": "node --watch Control/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.2.1",
+    "pg": "^8.18.0"
+  }
+}

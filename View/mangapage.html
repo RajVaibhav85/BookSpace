@@ -1,34 +1,31 @@
-<!doctype html>
-<html>
-  <head>
-    <link rel="stylesheet" href="/CSS/homepage.css" />
-    <link rel="icon" href="/Images/logo.jpg"/>
-    <title>Book Space</title>
-  </head>
+<!DOCTYPE html>
+<head>
+  <link rel="stylesheet" href="/CSS/manga.css">
+</head>
+<body>
+  <div id="bg"></div>
 
-  <body>
-    <div class="top-bar">
-      <div class="header">
-        <img src="/Images/logo.jpg" class="img-logo" alt="logo" />
-        <p class="title-text">Book Space</p>
-      </div>
+  <div class="top-bar">
+    <div class="header">
+      <img src="/Images/logo.jpg" class="img-logo" alt="logo" />
+      <p class="title-text contrast">Book Space</p>
+    </div>
 
-      <div class="top-bar_button_container">
-        <div class="types">
-          <button onclick="location.href='/manga'" class="top-bar_button">Manga</button>
+    <div class="top-bar_button_container ">
+      <div class="types">
+        <button onclick="location.href='/manga'" class="top-bar_button">Manga</button>
           <button onclick="location.href='/manhwa'" class="top-bar_button">Manhwa</button>
           <button onclick="location.href='/lightnovels'" class="top-bar_button">Light Novels</button>
           <button onclick="location.href='/comics'" class="top-bar_button">Comics</button>
-          <button class="top-bar_button">
-            <img src="/Images/menu.png" class="menu-icon" alt="menu" />
-          </button>
-        </div>
+        <button class="top-bar_button">
+          <img src="/Images/menu.png" class="menu-icon" alt="menu" />
+        </button>
       </div>
     </div>
+  </div>
 
-    <div id="star-bg">
-      <div class="content">
-        <div class="intro-section">
+  <div class="content">
+    <div class="intro-section">
           <div class="search-container">
             <img src="/Images/search.png" alt="search" />
             <input
@@ -59,9 +56,8 @@
           <h3>Upcomming:</h3>
           <div class="card-container" id="top-searched-3"></div>
         </div>
-      </div>
-    </div>
+  </div>
 
-    <script src="/JS/homepage.js"></script>
-  </body>
-</html>
+  <script src="/JS/manga.js">
+  </script>
+</body>
