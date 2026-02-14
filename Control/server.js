@@ -10,10 +10,6 @@ app.use(express.static(path.join(__dirname, "../View")));
 const pageRoutes = require("./Routes/pageRoutes");
 app.use("/", pageRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
-});
-
 //--------------------------------- DATABASE SETUP-------------------------
 const { Pool } = require('pg');
 
@@ -29,3 +25,16 @@ pool.connect()
   .then(() => console.log("Connected to PostgreSQL as superuser!"))
   .catch(err => console.error("Connection error:", err));
 
+module.exports = pool;
+
+// Middleware (IMPORTANT for form POST)
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+const registerRoutes = require('../Control/Routes/userRoutes');
+app.use("/", registerRoutes);
+
+
+app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`);
+});

@@ -1,18 +1,21 @@
 //-------------------------------------------SWITCH BETWEEN REGISTRATION N LOGIN -----------------------------------
 const container = document.getElementById('container');
-
 function showLogin() {
     container.innerHTML = `
     <h1>Login to BookSpace</h1>
     <form action="/login" method="post">
+
     <label for="username">Username</label><br>
     <input type="text" id="username" name="username" required><br><br>
+
     <label for="password">Password</label><br>
     <input type="password" id="password" name="password" required><br><br>
+
     <div style="display: flex; gap: 20px;">
     <input type="button" value="Register" onclick="showRegister()">
-    <input type="button" value="Login">
+    <input type="submit" value="Login">
     </div>
+    
     </form>
     `;
     
@@ -21,24 +24,27 @@ function showRegister() {
     container.innerHTML = `
     <h1>Register to BookSpace</h1>
     <form action="/register" method="post">
+
     <label for="username">Username</label><br>
     <input type="text" id="username" name="username" required><br><br>
+
     <label for="email">Email</label><br>
     <input type="text" id="email" name="email" required><br><br>
+
     <label for="password">Password</label><br>
     <input type="password" id="password" name="password" required><br><br>
+
     <div style="display: flex; gap: 20px;">
-    <input type="button" value="Register">
+    <input type="submit" value="Register" >
     <input type="button" value="Login" onclick="showLogin()">
     </div>
+
     </form>
     `;
     
 }
-    showLogin();
-
+showLogin();
 //-------------------------------------------SWITCH BETWEEN REGISTRATION N LOGIN ( above code)  ----------------------------------- 
-
 //add extra js here if u r willing to
 //-------------------------------------------Canvas Code ( dont move canvas code to top of page )--------------------------
 
