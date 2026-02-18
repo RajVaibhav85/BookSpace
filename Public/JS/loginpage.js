@@ -1,5 +1,6 @@
 //-------------------------------------------SWITCH BETWEEN REGISTRATION N LOGIN -----------------------------------
 const container = document.getElementById('container');
+
 function showLogin() {
     container.innerHTML = `
     <h1>Login to BookSpace</h1>
@@ -20,6 +21,7 @@ function showLogin() {
     `;
     
 }
+
 function showRegister() {
     container.innerHTML = `
     <h1>Register to BookSpace</h1>
@@ -44,6 +46,11 @@ function showRegister() {
     
 }
 showLogin();
+
+
+
+
+
 //-------------------------------------------SWITCH BETWEEN REGISTRATION N LOGIN ( above code)  ----------------------------------- 
 //add extra js here if u r willing to
 //-------------------------------------------Canvas Code ( dont move canvas code to top of page )--------------------------

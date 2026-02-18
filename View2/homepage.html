@@ -9,22 +9,11 @@
             --bg-border: 1px solid rgba(255, 255, 255, 0.15);
         }
 
-        @media(max-width: 768px){
-            .description{
-                font-size: 16px;
-                width: 75vw;
-            }
-            .search-container input {
-                min-width: 75vw;  
-                font-size: 16px;
-            }
-        }
-
         html , body{
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
-            overflow: hidden;
+            /* overflow: hidden; */
         }
 
         body{
@@ -164,6 +153,8 @@
 
             background: var(--bg-card);
             border: var(--bg-border);
+            background: rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
 
             border-radius: 8px;
             min-width: 160px;
@@ -203,14 +194,67 @@
         }
 
         #about{
+            width: 90%;              
             max-width: 800px;
+            box-sizing: border-box;
             margin: 40px auto;
             padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             background: var(--bg-card);
             border: var(--bg-border);
             border-radius: 12px;
         }
 
+        #about p{
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.8);
+            text-align: center;
+        }
+
+        @media(max-width: 768px){
+            .description{
+                font-size: 15px;
+                width: 75vw;
+            }
+
+            .search-container input {
+                min-width: 75vw;  
+                font-size: 16px;
+            }
+            #top-bar{
+                flex-direction: column;
+                gap: 10px;
+                align-items: center;
+            }
+
+            nav ul{
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            #top-bar p {
+                font-size: 20px;
+            }
+
+
+            nav a {
+                font-size: 16px;
+            }
+
+            #about{
+                width: 90%;
+                margin: 20px auto;
+                padding: 12px;
+            }
+            
+            /*             
+            .description{
+                max-width: 90vw;
+                font-size: 15px;
+            } */
+        }
 
         
 
@@ -220,11 +264,11 @@
 <body>
     <div id="top-bar">
         <div>
-            <p>BookSpace</p>
+            <p><a href="/home" style="text-decoration: none; color: white;">BookSpace</a></p>
         </div>
         <nav id="nav-bar">
             <ul>
-                <li><a href="/">Home</a></li>
+                <li><a href="/home">Home</a></li>
                 <li><a href="/books">Books</a></li>
                 <li class="dropdown">
             <a href="#">Genre</a>
@@ -247,7 +291,7 @@
         <div>
             <div class="search-container-wrapper">
                 <div class="search-container">
-                    <button><img src="search-icon.png" alt="Search" id="search-icon"></button>
+                    <button><img src="/search-icon.png" alt="Search" id="search-icon"></button>
                     <input type="text" placeholder="Search books..." />
                 </div>
             </div>

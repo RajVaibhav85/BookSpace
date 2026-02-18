@@ -6,6 +6,7 @@ const PORT = 3000;
 
 app.use(express.static(path.join(__dirname, "../Public")));
 app.use(express.static(path.join(__dirname, "../View")));
+app.use(express.static(path.join(__dirname, "../View2")));
 
 const pageRoutes = require("./Routes/pageRoutes");
 app.use("/", pageRoutes);

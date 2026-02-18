@@ -5,10 +5,11 @@ async function registerUser(req,res) {
     const sql = 'INSERT INTO registration (name, password, email, type) VALUES ($1, $2, $3, $4);'
     const values = [username, password, email, "user"];
     try{
+        
         pool.query(sql,values);
         res.redirect("/login")
     }catch(err){
-        console.error("Got error in insertio : ",err);
+        console.error("Got error in insertion : ",err);
         res.status(500).send("Registration failed");
     }
 }
