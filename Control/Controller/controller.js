@@ -4,7 +4,7 @@ const viewsPath = path.join(__dirname, "../../View");
 const viewsPath2 = path.join(__dirname, "../../View2");
 
 const getHomePage = (req, res) => {
-  res.sendFile(path.join(viewsPath, "homepage.html"));
+  res.sendFile(path.join(viewsPath2, "homepage.html"));
 };
 
 const getLoginPage = (req, res) => {

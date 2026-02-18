@@ -14,11 +14,11 @@ app.use("/", pageRoutes);
 const { Pool } = require('pg');
 
 const pool = new Pool({
-  user: 'postgres',        // default superuser
-  host: 'localhost',       // WSL + PostgreSQL is local
-  database: 'bookspace',    // default database (or your custom DB)
-  password: 'mypostgres', // the password you set during install
-  port: 5432,              // default PostgreSQL port
+  user: 'postgres',      
+  host: 'localhost',       
+  database: 'bookspace',    
+  password: 'mypostgres', 
+  port: 5432,              
 });
 
 pool.connect()
@@ -27,7 +27,7 @@ pool.connect()
 
 module.exports = pool;
 
-// Middleware (IMPORTANT for form POST)
+// Middleware 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
