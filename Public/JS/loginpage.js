@@ -1,3 +1,52 @@
+//-------------------------------------------SWITCH BETWEEN REGISTRATION N LOGIN -----------------------------------
+const container = document.getElementById('container');
+function showLogin() {
+    container.innerHTML = `
+    <h1>Login to BookSpace</h1>
+    <form action="/login" method="post">
+
+    <label for="username">Username</label><br>
+    <input type="text" id="username" name="username" required><br><br>
+
+    <label for="password">Password</label><br>
+    <input type="password" id="password" name="password" required><br><br>
+
+    <div style="display: flex; gap: 20px;">
+    <input type="button" value="Register" onclick="showRegister()">
+    <input type="submit" value="Login">
+    </div>
+    
+    </form>
+    `;
+    
+}
+function showRegister() {
+    container.innerHTML = `
+    <h1>Register to BookSpace</h1>
+    <form action="/register" method="post">
+
+    <label for="username">Username</label><br>
+    <input type="text" id="username" name="username" required><br><br>
+
+    <label for="email">Email</label><br>
+    <input type="text" id="email" name="email" required><br><br>
+
+    <label for="password">Password</label><br>
+    <input type="password" id="password" name="password" required><br><br>
+
+    <div style="display: flex; gap: 20px;">
+    <input type="submit" value="Register" >
+    <input type="button" value="Login" onclick="showLogin()">
+    </div>
+
+    </form>
+    `;
+    
+}
+showLogin();
+//-------------------------------------------SWITCH BETWEEN REGISTRATION N LOGIN ( above code)  ----------------------------------- 
+//add extra js here if u r willing to
+//-------------------------------------------Canvas Code ( dont move canvas code to top of page )--------------------------
 
 const canvas = document.getElementById("stars");
 const ctx = canvas.getContext("2d");  
@@ -166,70 +215,5 @@ async function CanvasClean() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);   
 }
 
-async function ToChangeTheme(){
-    if(isDarkTheme){
-        for(let i=0;i<150;i++){
-            starsStay.forEach(star=>{
-                star.radius+=2
-            })
-            await delay(100)
-        }
-        ctx.clearRect(0, 0, canvas.width, canvas.height);   
-        await delay(500);
-        CanvasClean()
-        document.getElementsByClassName("LoginBody")[0].style.backgroundColor="lightblue"
-        document.getElementsByClassName("TopBar")[0].style.backgroundColor="lightblue"
-        isDarkTheme = false;
-        for(let i=0;i<150;i++){
-            starsStay.forEach(star=>{
-                star.radius-=2
-            })
-        }
-    }else{
-        document.getElementsByClassName("LoginBody")[0].style.backgroundColor="black"
-        document.getElementsByClassName("TopBar")[0].style.backgroundColor="black"
-        isDarkTheme = true
-        animatingStar();
-    }
-}
-
-document.getElementsByClassName("theme-icon")[0].addEventListener("click",ToChangeTheme);
-//when u take class make sure it is [0] coz it returns list of elements
 
 
-//-------------------------------------------SWITCH BETWEEN REGISTRATION N LOGIN -----------------------------------
-
-let havacc= true;
-
-const loginButton = document.getElementsByClassName("LoginButton")[1];
-const regisButton = document.getElementsByClassName("LoginButton")[0];
-const LoginBoxhead = document.getElementById("MainHead")
-const RegisterTextFieldsGrid = document.getElementsByClassName("RegisterTextFieldsGrid")[0];
-const LoginTextFieldsGrid = document.getElementsByClassName("LoginTextFieldsGrid")[0];
-loginButton.addEventListener("click",()=>{
-    if(!havacc){
-        // Register the user
-
-    }else{
-        //Login
-        console.log("doe")
-        window.location.href ="homepage.html";
-    }
-})
-regisButton.addEventListener("click",()=>{
-    if(havacc){
-        LoginBoxhead.textContent ="Register"
-        loginButton.textContent ="Register"
-        regisButton.textContent = "Back "
-        LoginTextFieldsGrid.style.display = "none";
-        RegisterTextFieldsGrid.style.display = "grid";
-    }
-    else{
-        LoginBoxhead.textContent ="Login"
-        loginButton.textContent = "Login"
-        regisButton.textContent = "Register"
-        LoginTextFieldsGrid.style.display = "grid";
-        RegisterTextFieldsGrid.style.display = "none";
-    }
-     havacc = !havacc;
-})

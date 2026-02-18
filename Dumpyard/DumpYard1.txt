@@ -1,0 +1,32 @@
+Dump 1. hemanth 
+source of dump : View2/ loginpage.html   line 126(approx)
+comment : commented code is moved here
+advice : clear the comment code if u have no future use of it 
+
+---------start off Dump 1----------
+<!-- <h1>Login to BookSpace</h1>
+        <form action="/login" method="post">
+            <label for="username">Username</label><br>
+            <input type="text" id="username" name="username" required><br><br>
+            <label for="password">Password</label><br>
+            <input type="password" id="password" name="password" required><br><br>
+            <div style="display: flex; gap: 20px;">
+                <input type="button" value="Register" onclick="location.href='/register'">
+                <input type="button" value="Login">
+            </div>
+        </form> -->
+
+        <!-- <h1>Register to BookSpace</h1>
+        <form action="/register" method="post">
+            <label for="username">Username</label><br>
+            <input type="text" id="username" name="username" required><br><br>
+            <label for="email">Email</label><br>
+            <input type="text" id="email" name="email" required><br><br>
+            <label for="password">Password</label><br>
+            <input type="password" id="password" name="password" required><br><br>
+            <div style="display: flex; gap: 20px;">
+                <input type="button" value="Register" onclick="showRegister()">
+                <input type="button" value="Login" onclick="showLogin()">
+            </div>
+        </form> -->
+-----------END OF DUMP 1 -----------

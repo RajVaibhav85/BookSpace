@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 const pageController = require("../Controller/controller");
 
-router.get("/", pageController.getHomePage);
+router.get("/home", pageController.getHomePage);
+router.get("/", pageController.getLoginPage);
 router.get("/login", pageController.getLoginPage);
 router.get("/manga", pageController.getMangaPage);
 router.get("/manhwa", pageController.getManhwaPage);
