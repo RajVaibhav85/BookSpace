@@ -1,8 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const pageController = require("../Controller/controller");
+const { ensureAuthenticated } = require("../middleware/auth");
 
-router.get("/home", pageController.getHomePage);
+// router.get(URL,  Middleware(optional),   Handler)
+
+router.get("/home", ensureAuthenticated, pageController.getHomePage);
 router.get("/", pageController.getLoginPage);
 router.get("/login", pageController.getLoginPage);
 router.get("/manga", pageController.getMangaPage);

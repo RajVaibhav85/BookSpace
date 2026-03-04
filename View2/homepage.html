@@ -33,6 +33,27 @@
             z-index: 1;
         }
 
+        /* top-bar actions (logout etc.)
+        .top-bar_actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        #logout-link {
+            color: white;
+            text-decoration: none;
+            border: 1px solid rgba(255,255,255,0.12);
+            padding: 6px 10px;
+            border-radius: 6px;
+            background: transparent;
+            font-size: 14px;
+        }
+
+        #logout-link:hover {
+            opacity: 0.85;
+        } */
+
         #top-bar p{ margin: 0;
             font-size: 28px;
         }
@@ -271,19 +292,19 @@
                 <li><a href="/home">Home</a></li>
                 <li><a href="/books">Books</a></li>
                 <li class="dropdown">
-            <a href="#">Genre</a>
+                    <a href="#">Genre</a>
 
-            <ul class="dropdown-menu">
-                <li><a href="#">Action</a></li>
-                <li><a href="#">Romance</a></li>
-                <li><a href="#">Fantasy</a></li>
-                <li><a href="#">Horror</a></li>
-                <li><a href="#">Sci-Fi</a></li>
-            </ul>
-        </li>
-
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Action</a></li>
+                        <li><a href="#">Romance</a></li>
+                        <li><a href="#">Fantasy</a></li>
+                        <li><a href="#">Horror</a></li>
+                        <li><a href="#">Sci-Fi</a></li>
+                    </ul>
+                </li>
                 <li><a href="/about">About</a></li>
                 <li><a href="/profile">Profile</a></li>
+                <li><a href="/logout">Logout</a></li>
             </ul>
         </nav>
     </div>
