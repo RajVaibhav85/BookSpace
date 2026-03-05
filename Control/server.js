@@ -43,6 +43,8 @@ app.use(express.json());
 
 const registerRoutes = require('../Control/Routes/userRoutes');
 app.use("/", registerRoutes);
+const apiRoutes = require('../Control/Routes/apiRoutes');
+app.use("/api",apiRoutes);
 
 
 // 404 handler - redirect to the error page with a 404 code so the

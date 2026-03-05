@@ -25,6 +25,7 @@
 
         #top-bar{
             display: flex;
+            position: relative;
             justify-content: space-between;
             align-items: center;
             padding: 20px;
@@ -277,7 +278,24 @@
             } */
         }
 
-        
+        #card-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding: 16px;
+        }
+        .card {
+            width: 150px;
+            text-align: center;
+        }
+        .card img {
+            width: 100%;
+            border-radius: 8px;
+        }
+        .card p {
+            font-size: 12px;
+            margin-top: 6px;
+        }
 
 
     </style>
@@ -332,4 +350,34 @@
             </p>
         </div>
     </div>
+    <script>
+        const container = document.getElementById('card-container');
+
+        function displayCovers(covers){
+            container.innerHTML = '';
+            covers.forEach(manga => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <img src="${manga.cover}" alt="${manga.title}" />
+                    <p>${manga.title}</p>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        async function fetchCovers(){
+            try {
+                const response = await fetch('/api/covers');
+                const covers = await response.json();
+                console.log(covers);
+                displayCovers(covers);
+            } catch (err) {
+                console.error("Failed to fetch covers:", err);
+                container.innerHTML = `<p>Failed to load covers${err}.</p>`;
+            }
+        }
+
+        fetchCovers();
+    </script>
 </body>
