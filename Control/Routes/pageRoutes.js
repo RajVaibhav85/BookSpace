@@ -5,13 +5,16 @@ const { ensureAuthenticated } = require("../middleware/auth");
 
 // router.get(URL,  Middleware(optional),   Handler)
 
-router.get("/home", ensureAuthenticated, pageController.getHomePage);
-router.get("/", pageController.getLoginPage);
+router.get("/", ensureAuthenticated, pageController.getHomePage);
 router.get("/login", pageController.getLoginPage);
-router.get("/manga", pageController.getMangaPage);
-router.get("/manhwa", pageController.getManhwaPage);
-router.get("/lightnovels", pageController.getLightNovelsPage);
-router.get("/comics", pageController.getComicsPage);
+router.get("/view", pageController.getViewPage);
+router.get("/reader", pageController.getReaderPage);
+
+
+// router.get("/manga", pageController.getMangaPage);
+// router.get("/manhwa", pageController.getManhwaPage);
+// router.get("/lightnovels", pageController.getLightNovelsPage);
+// router.get("/comics", pageController.getComicsPage);
 
 
 module.exports = router;

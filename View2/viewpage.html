@@ -1,257 +1,390 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>BookSpace</title>
+    <title>BookSpace – Results</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         :root{
             --bg-gradient: linear-gradient(160deg, #000000 0%, #2a0a40 45%, #0b1c3d 100%);
-            --bg-card:rgba(255, 255, 255, 0.03);
-            --bg-border: 1px solid rgba(255, 255, 255, 0.15);
+            --bg-card: rgba(255,255,255,0.03);
+            --bg-border: 1px solid rgba(255,255,255,0.15);
         }
 
-        @media(max-width: 768px){
-            .description{
-                font-size: 16px;
-                width: 75vw;
-            }
-            .search-container input {
-                min-width: 75vw;  
-                font-size: 16px;
-            }
-        }
+        html, body { margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        body { color: white; background: var(--bg-gradient); background-repeat: no-repeat; min-height: 100vh; }
 
-        html , body{
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-            overflow: hidden;
-        }
+        /* ── Top bar ── */
+        #top-bar { display: flex; justify-content: space-between; align-items: center; padding: 20px; position: relative; z-index: 100; background: transparent; }
+        #top-bar p { margin: 0; font-size: 28px; }
 
-        body{
-            color: white;
-            background: var(--bg-gradient);
-            background-repeat: no-repeat;
-            min-height: 100vh;
-        }
+        nav { background: transparent; padding: 15px 30px; }
+        nav ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 20px; }
+        nav a { text-decoration: none; color: white; font-weight: 500; font-size: 20px; transition: 0.3s; }
+        nav a:hover { opacity: 0.7; }
 
-        #top-bar{
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            position: sticky;
-            top: 0;
-            z-index: 1;
-        }
-
-        #top-bar p{ margin: 0;
-            font-size: 28px;
-        }
-
-        #content{
-            overflow-x: hidden;
-            overflow-y: auto;
-        }
-
-        #content::-webkit-scrollbar {
-        width: 10px;
-        }
-
-        #content::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 20px;
-        }
-
-        #content::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 20px;
-        backdrop-filter: blur(10px);
-        border: 2px solid rgba(255,255,255,0.1);
-        transition: 0.3s;
-        }
-
-        #content::-webkit-scrollbar-thumb:hover {
-        background: rgba(255, 255, 255, 0.35);
-        }
-
-        nav {
-        background: transparent;
-        padding: 15px 30px;
-        }
-
-        nav ul {
-        list-style: none;      
-        margin: 0;
-        padding: 0;
-        display: flex;         
-        gap: 20px;             
-        }
-
-        nav a {
-        text-decoration: none;
-        color: white;
-        font-weight: 500;
-        font-size: 20px;
-        transition: 0.3s;
-        }
-
-        nav a:hover {
-            opacity: 0.7;
-        }
-
-        .search-container-wrapper {
-            display: flex;
-            justify-content: center;
-            margin-top: 10px;
-        }
-        .search-container{
-            padding-left: 10px;
-            background-color: var(--bg-card);
-            border-radius: 30px;
-            border: var(--bg-border);
-            display: flex;
-            transition: 60ms;
-        }
-        .search-container:hover{
-            background-color: rgba(255, 255, 255, 0.07);
-        }
-        .search-container input {
-            width: 80vw;
-            color: white;
-            height: 30px;
-            padding: 10px;
-            border: none;
-            background: transparent;
-            font-size: 18px;
-        }
-
-        .search-container input:focus {
-            outline: none;
-        }
-
-        .search-container button { 
-            border: none;
-            cursor: pointer;
-            border-radius: 30px 0 0 30px;
-            background: transparent;
-        } 
-        .search-container img {
-            width: 20px;
-            height: 20px;
-        }
-
-        .description{
-            max-width: 600px;
-            text-align: center;
-            margin: 20px auto;
-            font-size: 18px;
-            line-height: 1.6;
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        .dropdown {
-            position: relative;
-        }
+        /* ── Shared dropdown styles (navbar + filter) ── */
+        .dropdown { position: relative; }
 
         .dropdown-menu {
             position: absolute;
             top: 100%;
-            left: 0;
-
+            left: 50%;
+            transform: translateX(-50%);
             list-style: none;
-            padding: 10px 0;
-            margin: 0;
-
-            background: var(--bg-card);
+            padding: 12px;
+            margin: 4px 0 0 0;
+            background: rgba(0,0,0,0.1);
             border: var(--bg-border);
-
+            backdrop-filter: blur(10px);
             border-radius: 8px;
-            min-width: 160px;
-
             display: none;
+            z-index: 999;
         }
+        .dropdown-menu li { padding: 6px 10px; white-space: nowrap; cursor: pointer; border-radius: 4px; transition: 0.2s; }
+        .dropdown-menu li:hover { background: rgba(255,255,255,0.1); }
+        .dropdown-menu li.active { background: rgba(255,255,255,0.15); }
+        .dropdown-menu a { font-size: 14px; display: block; text-decoration: none; color: white; }
+        .dropdown:hover .dropdown-menu { display: block; }
 
-        .dropdown-menu li {
-            padding: 8px 15px;
+        /* navbar genre is a 4-col grid */
+        .dropdown-menu.genre-nav {
+            display: none;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2px 8px;
+            min-width: 520px;
         }
+        .dropdown:hover .dropdown-menu.genre-nav { display: grid; }
 
-        .dropdown-menu a {
-            font-size: 16px;
-            display: block;
+        /* filter genre is also a 4-col grid */
+        .dropdown-menu.genre-filter {
+            display: none;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2px 8px;
+            min-width: 520px;
         }
+        .dropdown:hover .dropdown-menu.genre-filter { display: grid; }
 
-        .dropdown:hover .dropdown-menu {
-            display: block;
-        }
+        /* ── Filter bar ── */
+        #filter-bar { display: flex; align-items: center; justify-content: center; gap: 16px; padding: 20px 20px 0; }
 
-        #card-container{
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-        }
-
-        .card{
-            width: 100%;
-            height: auto;
-            border-radius: 8px;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .card:hover{
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(255, 255, 255, 0.2);
-        }
-
-        #about{
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 20px;
-            background: var(--bg-card);
+        .filter-btn {
+            background: rgba(0,0,0,0.1);
             border: var(--bg-border);
-            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+            padding: 8px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            white-space: nowrap;
         }
+        .filter-btn:hover { opacity: 0.7; }
 
+        #apply-filters {
+            background: rgba(0,0,0,0.1);
+            border: var(--bg-border);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+        #apply-filters:hover { opacity: 0.7; }
 
-        
+        /* ── Search bar ── */
+        .search-container-wrapper { display: flex; justify-content: center; margin-top: 30px; }
+        .search-container { padding-left: 10px; background-color: var(--bg-card); border-radius: 30px; border: var(--bg-border); display: flex; transition: 60ms; }
+        .search-container:hover { background-color: rgba(255,255,255,0.07); }
+        .search-container input { width: 50vw; color: white; height: 30px; padding: 10px; border: none; background: transparent; font-size: 18px; }
+        .search-container input:focus { outline: none; }
+        .search-container button { border: none; cursor: pointer; border-radius: 30px 0 0 30px; background: transparent; }
+        .search-container img { width: 20px; height: 20px; }
 
+        /* ── Result heading ── */
+        #result-heading { padding: 20px 20px 0; text-align: center; font-size: 16px; color: rgba(255,255,255,0.55); }
 
+        /* ── Scrollable content ── */
+        #content { overflow-x: hidden; overflow-y: auto; }
+        #content::-webkit-scrollbar { width: 10px; }
+        #content::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 20px; }
+        #content::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 20px; backdrop-filter: blur(10px); border: 2px solid rgba(255,255,255,0.1); }
+        #content::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.35); }
+
+        /* ── Card grid ── */
+        #card-container { display: flex; flex-wrap: wrap; gap: 16px; padding: 16px; justify-content: center; }
+        .card { width: 150px; text-align: center; border-radius: 8px; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(255,255,255,0.2); }
+        .card img { width: 100%; border-radius: 8px; }
+        .card p { font-size: 12px; margin-top: 6px; }
+
+        /* ── States ── */
+        #status-msg { padding: 40px; text-align: center; color: rgba(255,255,255,0.5); font-size: 16px; }
+
+        /* ── Pagination ── */
+        #pagination { display: flex; justify-content: center; gap: 12px; padding: 24px; }
+        #pagination button { background: var(--bg-card); border: var(--bg-border); color: white; padding: 8px 20px; border-radius: 20px; cursor: pointer; font-size: 14px; transition: 0.2s; }
+        #pagination button:hover { background: rgba(255,255,255,0.1); }
+        #pagination button:disabled { opacity: 0.3; cursor: default; }
+        #page-info { display: flex; align-items: center; font-size: 14px; color: rgba(255,255,255,0.6); }
+
+        @media(max-width: 768px){
+            #top-bar { flex-direction: column; gap: 10px; align-items: center; }
+            nav ul { flex-wrap: wrap; justify-content: center; }
+            #top-bar p { font-size: 20px; }
+            nav a { font-size: 16px; }
+            .search-container input { min-width: 75vw; font-size: 16px; }
+            .dropdown-menu.genre-nav,
+            .dropdown-menu.genre-filter { grid-template-columns: repeat(2, 1fr); min-width: 260px; }
+            #filter-bar { flex-wrap: wrap; }
+        }
     </style>
 </head>
 <body>
     <div id="top-bar">
         <div>
-            <p>BookSpace</p>
+            <p><a href="/" style="text-decoration: none; color: white;">BookSpace</a></p>
         </div>
         <nav id="nav-bar">
             <ul>
                 <li><a href="/">Home</a></li>
                 <li><a href="/books">Books</a></li>
                 <li class="dropdown">
-            <a href="#">Genre</a>
-
-            <ul class="dropdown-menu">
-                <li><a href="#">Action</a></li>
-                <li><a href="#">Romance</a></li>
-                <li><a href="#">Fantasy</a></li>
-                <li><a href="#">Horror</a></li>
-                <li><a href="#">Sci-Fi</a></li>
-            </ul>
+                    <a href="#">Genre</a>
+                    <ul class="dropdown-menu genre-nav">
+                        <li><a href="/view?genre=Action">Action</a></li>
+                        <li><a href="/view?genre=Adventure">Adventure</a></li>
+                        <li><a href="/view?genre=Comedy">Comedy</a></li>
+                        <li><a href="/view?genre=Crime">Crime</a></li>
+                        <li><a href="/view?genre=Drama">Drama</a></li>
+                        <li><a href="/view?genre=Fantasy">Fantasy</a></li>
+                        <li><a href="/view?genre=Historical">Historical</a></li>
+                        <li><a href="/view?genre=Horror">Horror</a></li>
+                        <li><a href="/view?genre=Isekai">Isekai</a></li>
+                        <li><a href="/view?genre=Mahou+Shoujo">Mahou Shoujo</a></li>
+                        <li><a href="/view?genre=Mecha">Mecha</a></li>
+                        <li><a href="/view?genre=Medical">Medical</a></li>
+                        <li><a href="/view?genre=Mystery">Mystery</a></li>
+                        <li><a href="/view?genre=Philosophical">Philosophical</a></li>
+                        <li><a href="/view?genre=Psychological">Psychological</a></li>
+                        <li><a href="/view?genre=Romance">Romance</a></li>
+                        <li><a href="/view?genre=Sci-Fi">Sci-Fi</a></li>
+                        <li><a href="/view?genre=Slice+of+Life">Slice of Life</a></li>
+                        <li><a href="/view?genre=Sports">Sports</a></li>
+                        <li><a href="/view?genre=Superhero">Superhero</a></li>
+                        <li><a href="/view?genre=Supernatural">Supernatural</a></li>
+                        <li><a href="/view?genre=Thriller">Thriller</a></li>
+                        <li><a href="/view?genre=Tragedy">Tragedy</a></li>
+                        <li><a href="/view?genre=Wuxia">Wuxia</a></li>
+                    </ul>
                 </li>
-
                 <li><a href="/about">About</a></li>
                 <li><a href="/profile">Profile</a></li>
+                <li><a href="/logout">Logout</a></li>
             </ul>
         </nav>
     </div>
+
     <div id="content">
-        <div>
-            <div class="search-container-wrapper">
-                <div class="search-container">
-                    <button><img src="search-icon.png" alt="Search" id="search-icon"></button>
-                    <input type="text" placeholder="Search books..." />
-                </div>
+        <div class="search-container-wrapper">
+            <div class="search-container">
+                <button id="search-btn"><img src="/search-icon.png" alt="Search"></button>
+                <input type="text" id="search-input" placeholder="Search books..." />
             </div>
         </div>
+
+        <!-- Filter bar: dropdowns with values, Apply button navigates -->
+        <div id="filter-bar">
+
+            <div class="dropdown">
+                <button class="filter-btn" id="genre-btn">Genre: All ▾</button>
+                <ul class="dropdown-menu genre-filter">
+                    <li data-value="">All</li>
+                    <li data-value="Action">Action</li>
+                    <li data-value="Adventure">Adventure</li>
+                    <li data-value="Comedy">Comedy</li>
+                    <li data-value="Crime">Crime</li>
+                    <li data-value="Drama">Drama</li>
+                    <li data-value="Fantasy">Fantasy</li>
+                    <li data-value="Historical">Historical</li>
+                    <li data-value="Horror">Horror</li>
+                    <li data-value="Isekai">Isekai</li>
+                    <li data-value="Mahou Shoujo">Mahou Shoujo</li>
+                    <li data-value="Mecha">Mecha</li>
+                    <li data-value="Medical">Medical</li>
+                    <li data-value="Mystery">Mystery</li>
+                    <li data-value="Philosophical">Philosophical</li>
+                    <li data-value="Psychological">Psychological</li>
+                    <li data-value="Romance">Romance</li>
+                    <li data-value="Sci-Fi">Sci-Fi</li>
+                    <li data-value="Slice of Life">Slice of Life</li>
+                    <li data-value="Sports">Sports</li>
+                    <li data-value="Superhero">Superhero</li>
+                    <li data-value="Supernatural">Supernatural</li>
+                    <li data-value="Thriller">Thriller</li>
+                    <li data-value="Tragedy">Tragedy</li>
+                    <li data-value="Wuxia">Wuxia</li>
+                </ul>
+            </div>
+
+            <div class="dropdown">
+                <button class="filter-btn" id="status-btn">Status: All ▾</button>
+                <ul class="dropdown-menu">
+                    <li data-value="">All</li>
+                    <li data-value="ongoing">Ongoing</li>
+                    <li data-value="completed">Completed</li>
+                    <li data-value="hiatus">Hiatus</li>
+                    <li data-value="cancelled">Cancelled</li>
+                </ul>
+            </div>
+
+            <button id="apply-filters">Apply</button>
+        </div>
+
+        <div id="result-heading"></div>
+        <div id="card-container"></div>
+        <div id="status-msg">Loading...</div>
+
+        <div id="pagination">
+            <button id="prev-btn" disabled>← Prev</button>
+            <span id="page-info"></span>
+            <button id="next-btn" disabled>Next →</button>
+        </div>
     </div>
+
+    <script>
+        const LIMIT = 20;
+        let selectedGenre  = '';
+        let selectedStatus = '';
+        let currentOffset  = 0;
+        let totalResults   = 0;
+
+        // ── 1. Init filter dropdowns ──────────────────────────────────────────
+        function initDropdowns() {
+            document.querySelectorAll('#filter-bar .dropdown').forEach(dropdown => {
+                const btn   = dropdown.querySelector('.filter-btn');
+                const label = btn.textContent.split(':')[0];
+                dropdown.querySelectorAll('li').forEach(li => {
+                    li.addEventListener('click', () => {
+                        dropdown.querySelectorAll('li').forEach(i => i.classList.remove('active'));
+                        li.classList.add('active');
+                        const val = li.dataset.value;
+                        if (label === 'Genre')  selectedGenre  = val;
+                        if (label === 'Status') selectedStatus = val;
+                        btn.textContent = `${label}: ${val || 'All'} ▾`;
+                    });
+                });
+            });
+
+            // Sync dropdowns to URL on load
+            const p = new URLSearchParams(window.location.search);
+            const g = p.get('genre') || '', s = p.get('status') || '';
+            if (g) { selectedGenre  = g; document.getElementById('genre-btn').textContent  = `Genre: ${g} ▾`; }
+            if (s) { selectedStatus = s; document.getElementById('status-btn').textContent = `Status: ${s} ▾`; }
+            if (p.get('title')) document.getElementById('search-input').value = p.get('title');
+            currentOffset = parseInt(p.get('offset') || '0', 10);
+        }
+
+        // ── 2. doSearch ───────────────────────────────────────────────────────
+        function doSearch() {
+            const query = document.getElementById('search-input').value.trim();
+            if (!query) return;
+            currentOffset = 0;
+            fetchResults({ title: query });
+        }
+
+        // ── 3. applyFilters ───────────────────────────────────────────────────
+        function applyFilters() {
+            const title = document.getElementById('search-input').value.trim();
+            currentOffset = 0;
+            fetchResults({ title, genre: title ? '' : selectedGenre, status: title ? '' : selectedStatus });
+        }
+
+        // ── 4. fetchResults ───────────────────────────────────────────────────
+        async function fetchResults({ title = '', genre = '', status = '' } = {}) {
+            const statusMsg     = document.getElementById('status-msg');
+            const resultHeading = document.getElementById('result-heading');
+            const container     = document.getElementById('card-container');
+
+            // Update URL
+            const p = new URLSearchParams();
+            if (title)         p.set('title',  title);
+            if (genre)         p.set('genre',  genre);
+            if (status)        p.set('status', status);
+            if (currentOffset) p.set('offset', currentOffset);
+            window.history.pushState({}, '', `/view?${p.toString()}`);
+
+            // Heading
+            resultHeading.textContent = title  ? `Results for "${title}"`
+                                      : genre  ? `Genre: ${genre}${status ? ' · ' + status : ''}`
+                                      : status ? `Status: ${status}`
+                                      : 'Popular manga';
+
+            // Build API URL
+            let apiUrl = `/api/covers`;
+            if (title)  apiUrl = `/api/search?title=${encodeURIComponent(title)}&limit=${LIMIT}&offset=${currentOffset}`;
+            else if (genre)  apiUrl = `/api/search/genre?genres=${encodeURIComponent(genre)}&limit=${LIMIT}&offset=${currentOffset}${status ? '&status=' + encodeURIComponent(status) : ''}`;
+            else if (status) apiUrl = `/api/search/status?status=${encodeURIComponent(status)}&limit=${LIMIT}&offset=${currentOffset}`;
+
+            statusMsg.textContent = 'Loading...';
+            container.innerHTML   = '';
+
+            try {
+                const data    = await (await fetch(apiUrl)).json();
+                const results = Array.isArray(data) ? data : (data.results || []);
+                totalResults  = Array.isArray(data) ? data.length : (data.total || 0);
+
+                if (!results.length) { statusMsg.textContent = 'No results found.'; return; }
+                statusMsg.textContent = '';
+                results.forEach(manga => {
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.innerHTML = `<img src="${manga.cover || '/placeholder.png'}" alt="${manga.title}"><p>${manga.title}</p>`;
+                    card.addEventListener('click', () => window.location.href = `/reader?id=${manga.id}`);
+                    container.appendChild(card);
+                });
+
+                // Pagination
+                const cur = Math.floor(currentOffset / LIMIT) + 1;
+                const tot = Math.ceil(totalResults / LIMIT) || 1;
+                document.getElementById('page-info').textContent = `Page ${cur} of ${tot}`;
+                document.getElementById('prev-btn').disabled = currentOffset <= 0;
+                document.getElementById('next-btn').disabled = currentOffset + LIMIT >= totalResults;
+
+            } catch (err) {
+                statusMsg.textContent = 'Failed to load results.';
+            }
+        }
+
+        // ── 5. Event listeners + init ─────────────────────────────────────────
+        function init() {
+            initDropdowns();
+
+            document.getElementById('search-btn').addEventListener('click', doSearch);
+            document.getElementById('search-input').addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
+            document.getElementById('apply-filters').addEventListener('click', applyFilters);
+
+            document.getElementById('prev-btn').addEventListener('click', () => {
+                currentOffset = Math.max(0, currentOffset - LIMIT);
+                const p = new URLSearchParams(window.location.search);
+                fetchResults({ title: p.get('title') || '', genre: p.get('genre') || '', status: p.get('status') || '' });
+            });
+            document.getElementById('next-btn').addEventListener('click', () => {
+                currentOffset += LIMIT;
+                const p = new URLSearchParams(window.location.search);
+                fetchResults({ title: p.get('title') || '', genre: p.get('genre') || '', status: p.get('status') || '' });
+            });
+
+            // Initial load from URL
+            const p = new URLSearchParams(window.location.search);
+            fetchResults({ title: p.get('title') || '', genre: p.get('genre') || '', status: p.get('status') || '' });
+        }
+
+        init();
+    </script>
 </body>
+</html>

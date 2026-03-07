@@ -13,7 +13,6 @@
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
-            /* overflow: hidden; */
         }
 
         body{
@@ -25,299 +24,147 @@
 
         #top-bar{
             display: flex;
-            position: relative;
             justify-content: space-between;
             align-items: center;
             padding: 20px;
-            position: sticky;
-            top: 0;
-            z-index: 1;
-        }
-
-        /* top-bar actions (logout etc.)
-        .top-bar_actions {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        #logout-link {
-            color: white;
-            text-decoration: none;
-            border: 1px solid rgba(255,255,255,0.12);
-            padding: 6px 10px;
-            border-radius: 6px;
-            background: transparent;
-            font-size: 14px;
-        }
-
-        #logout-link:hover {
-            opacity: 0.85;
-        } */
-
-        #top-bar p{ margin: 0;
-            font-size: 28px;
-        }
-
-        #content{
-            overflow-x: hidden;
-            overflow-y: auto;
-        }
-
-        #content::-webkit-scrollbar {
-        width: 10px;
-        }
-
-        #content::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 20px;
-        }
-
-        #content::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 20px;
-        backdrop-filter: blur(10px);
-        border: 2px solid rgba(255,255,255,0.1);
-        transition: 0.3s;
-        }
-
-        #content::-webkit-scrollbar-thumb:hover {
-        background: rgba(255, 255, 255, 0.35);
-        }
-
-        nav {
-        background: transparent;
-        padding: 15px 30px;
-        }
-
-        nav ul {
-        list-style: none;      
-        margin: 0;
-        padding: 0;
-        display: flex;         
-        gap: 20px;             
-        }
-
-        nav a {
-        text-decoration: none;
-        color: white;
-        font-weight: 500;
-        font-size: 20px;
-        transition: 0.3s;
-        }
-
-        nav a:hover {
-            opacity: 0.7;
-        }
-
-        .search-container-wrapper {
-            display: flex;
-            justify-content: center;
-            margin-top: 50px;
-        }
-        .search-container{
-            padding-left: 10px;
-            background-color: var(--bg-card);
-            border-radius: 30px;
-            border: var(--bg-border);
-            display: flex;
-            transition: 60ms;
-        }
-        .search-container:hover{
-            background-color: rgba(255, 255, 255, 0.07);
-        }
-        .search-container input {
-            width: 50vw;
-            color: white;
-            height: 30px;
-            padding: 10px;
-            border: none;
-            background: transparent;
-            font-size: 18px;
-        }
-
-        .search-container input:focus {
-            outline: none;
-        }
-
-        .search-container button { 
-            border: none;
-            cursor: pointer;
-            border-radius: 30px 0 0 30px;
-            background: transparent;
-        } 
-        .search-container img {
-            width: 20px;
-            height: 20px;
-        }
-
-        .description{
-            max-width: 600px;
-            text-align: center;
-            margin: 20px auto;
-            font-size: 18px;
-            line-height: 1.6;
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        .dropdown {
             position: relative;
+            top: 0;
+            z-index: 100;
+            background: transparent;
         }
 
+        #top-bar p{ margin: 0; font-size: 28px; }
+
+        #content{ overflow-x: hidden; overflow-y: auto; }
+
+        #content::-webkit-scrollbar { width: 10px; }
+        #content::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 20px; }
+        #content::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 20px; backdrop-filter: blur(10px); border: 2px solid rgba(255,255,255,0.1); transition: 0.3s; }
+        #content::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.35); }
+
+        nav { background: transparent; padding: 15px 30px; }
+        nav ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 20px; }
+        nav a { text-decoration: none; color: white; font-weight: 500; font-size: 20px; transition: 0.3s; }
+        nav a:hover { opacity: 0.7; }
+
+        .search-container-wrapper { display: flex; justify-content: center; margin-top: 50px; }
+        .search-container { padding-left: 10px; background-color: var(--bg-card); border-radius: 30px; border: var(--bg-border); display: flex; transition: 60ms; }
+        .search-container:hover { background-color: rgba(255,255,255,0.07); }
+        .search-container input { width: 50vw; color: white; height: 30px; padding: 10px; border: none; background: transparent; font-size: 18px; }
+        .search-container input:focus { outline: none; }
+        .search-container button { border: none; cursor: pointer; border-radius: 30px 0 0 30px; background: transparent; }
+        .search-container img { width: 20px; height: 20px; }
+
+        .description { max-width: 600px; text-align: center; margin: 20px auto; font-size: 18px; line-height: 1.6; color: rgba(255,255,255,0.8); }
+
+        /* ── Dropdown: grid layout ───────────────────────────────────────────── */
+        .dropdown { position: relative; }
         .dropdown-menu {
             position: absolute;
             top: 100%;
-            left: 0;
-
+            left: 50%;
+            right: unset;
+            transform:  translateX(-50%);
             list-style: none;
-            padding: 10px 0;
+            padding: 12px;
             margin: 0;
-
-            background: var(--bg-card);
-            border: var(--bg-border);
             background: rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
-
-            border-radius: 8px;
-            min-width: 160px;
-
-            display: none;
-        }
-
-        .dropdown-menu li {
-            padding: 8px 15px;
-        }
-
-        .dropdown-menu a {
-            font-size: 16px;
-            display: block;
-        }
-
-        .dropdown:hover .dropdown-menu {
-            display: block;
-        }
-
-        #card-container{
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-        }
-
-        .card{
-            width: 100%;
-            height: auto;
-            border-radius: 8px;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .card:hover{
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(255, 255, 255, 0.2);
-        }
-
-        #about{
-            width: 90%;              
-            max-width: 800px;
-            box-sizing: border-box;
-            margin: 40px auto;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background: var(--bg-card);
             border: var(--bg-border);
-            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            display: none;
+
+            /* 4-column grid on desktop */
+            display: none;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2px 8px;
+            min-width: 520px;
         }
+        .dropdown-menu li { padding: 6px 10px; white-space: nowrap; }
+        .dropdown-menu a { font-size: 14px; display: block; }
+        .dropdown:hover .dropdown-menu { display: grid; }
 
-        #about p{
-            font-size: 18px;
-            color: rgba(255, 255, 255, 0.8);
-            text-align: center;
-        }
-
-        @media(max-width: 768px){
-            .description{
-                font-size: 15px;
-                width: 75vw;
-            }
-
-            .search-container input {
-                min-width: 75vw;  
-                font-size: 16px;
-            }
-            #top-bar{
-                flex-direction: column;
-                gap: 10px;
-                align-items: center;
-            }
-
-            nav ul{
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-
-            #top-bar p {
-                font-size: 20px;
-            }
-
-
-            nav a {
-                font-size: 16px;
-            }
-
-            #about{
-                width: 90%;
-                margin: 20px auto;
-                padding: 12px;
-            }
-            
-            /*             
-            .description{
-                max-width: 90vw;
-                font-size: 15px;
-            } */
-        }
-
+        /* ── Card container: centered on mobile ─────────────────────────────── */
         #card-container {
             display: flex;
             flex-wrap: wrap;
             gap: 16px;
             padding: 16px;
+            justify-content: center;        /* ← fixed: centers cards on all screens */
         }
-        .card {
-            width: 150px;
-            text-align: center;
-        }
-        .card img {
-            width: 100%;
-            border-radius: 8px;
-        }
-        .card p {
-            font-size: 12px;
-            margin-top: 6px;
+        .card { width: 150px; text-align: center; border-radius: 8px; transition: transform 0.2s, box-shadow 0.2s; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(255,255,255,0.2); }
+        .card img { width: 100%; border-radius: 8px; }
+        .card p { font-size: 12px; margin-top: 6px; }
+
+        #about { width: 90%; max-width: 800px; box-sizing: border-box; margin: 40px auto; padding: 20px; display: flex; flex-direction: column; align-items: center; background: var(--bg-card); border: var(--bg-border); border-radius: 12px; }
+        #about p { font-size: 18px; color: rgba(255,255,255,0.8); text-align: center; }
+
+        /* ── Mobile ─────────────────────────────────────────────────────────── */
+        @media(max-width: 768px){
+            .description { font-size: 15px; width: 75vw; }
+            .search-container input { min-width: 75vw; font-size: 16px; }
+            #top-bar { flex-direction: column; gap: 10px; align-items: center; }
+            nav ul { flex-wrap: wrap; justify-content: center; }
+            #top-bar p { font-size: 20px; }
+            nav a { font-size: 16px; }
+            #about { width: 90%; margin: 20px auto; padding: 12px; }
+
+            /* 2-column dropdown grid on mobile */
+            .dropdown-menu {
+                grid-template-columns: repeat(2, 1fr);
+                min-width: 260px;
+                left: 50%;
+                right: unset;
+                transform: translateX(-50%);
+            }
+
+            /* smaller cards, 2 per row on mobile */
+            .card { width: calc(50% - 24px); }
         }
 
-
+        @media(max-width: 400px){
+            /* single column on very small screens */
+            .card { width: 100%; max-width: 180px; }
+        }
     </style>
 </head>
 <body>
     <div id="top-bar">
         <div>
-            <p><a href="/home" style="text-decoration: none; color: white;">BookSpace</a></p>
+            <p><a href="/" style="text-decoration: none; color: white;">BookSpace</a></p>
         </div>
         <nav id="nav-bar">
             <ul>
-                <li><a href="/home">Home</a></li>
+                <li><a href="/">Home</a></li>
                 <li><a href="/books">Books</a></li>
                 <li class="dropdown">
                     <a href="#">Genre</a>
-
                     <ul class="dropdown-menu">
-                        <li><a href="#">Action</a></li>
-                        <li><a href="#">Romance</a></li>
-                        <li><a href="#">Fantasy</a></li>
-                        <li><a href="#">Horror</a></li>
-                        <li><a href="#">Sci-Fi</a></li>
+                        <li><a href="/view?genre=Action">Action</a></li>
+                        <li><a href="/view?genre=Adventure">Adventure</a></li>
+                        <li><a href="/view?genre=Comedy">Comedy</a></li>
+                        <li><a href="/view?genre=Crime">Crime</a></li>
+                        <li><a href="/view?genre=Drama">Drama</a></li>
+                        <li><a href="/view?genre=Fantasy">Fantasy</a></li>
+                        <li><a href="/view?genre=Historical">Historical</a></li>
+                        <li><a href="/view?genre=Horror">Horror</a></li>
+                        <li><a href="/view?genre=Isekai">Isekai</a></li>
+                        <li><a href="/view?genre=Mahou+Shoujo">Mahou Shoujo</a></li>
+                        <li><a href="/view?genre=Mecha">Mecha</a></li>
+                        <li><a href="/view?genre=Medical">Medical</a></li>
+                        <li><a href="/view?genre=Mystery">Mystery</a></li>
+                        <li><a href="/view?genre=Philosophical">Philosophical</a></li>
+                        <li><a href="/view?genre=Psychological">Psychological</a></li>
+                        <li><a href="/view?genre=Romance">Romance</a></li>
+                        <li><a href="/view?genre=Sci-Fi">Sci-Fi</a></li>
+                        <li><a href="/view?genre=Slice+of+Life">Slice of Life</a></li>
+                        <li><a href="/view?genre=Sports">Sports</a></li>
+                        <li><a href="/view?genre=Superhero">Superhero</a></li>
+                        <li><a href="/view?genre=Supernatural">Supernatural</a></li>
+                        <li><a href="/view?genre=Thriller">Thriller</a></li>
+                        <li><a href="/view?genre=Tragedy">Tragedy</a></li>
+                        <li><a href="/view?genre=Wuxia">Wuxia</a></li>
                     </ul>
                 </li>
                 <li><a href="/about">About</a></li>
@@ -330,19 +177,18 @@
         <div>
             <div class="search-container-wrapper">
                 <div class="search-container">
-                    <button><img src="/search-icon.png" alt="Search" id="search-icon"></button>
-                    <input type="text" placeholder="Search books..." />
+                    <button id="search-btn"><img src="/search-icon.png" alt="Search" id="search-icon"></button>
+                    <input type="text" id="search-input" placeholder="Search books..." />
                 </div>
             </div>
             <p class="description">
-            Welcome to Book Space, your ultimate destination for manga, manhwa,
-            light novels, and comics! Dive into a world of captivating stories
-            and stunning artwork. Explore our extensive library, discover new
-            favorites, and stay updated with the latest releases. Happy reading!
-          </p>
+                Welcome to Book Space, your ultimate destination for manga, manhwa,
+                light novels, and comics! Dive into a world of captivating stories
+                and stunning artwork. Explore our extensive library, discover new
+                favorites, and stay updated with the latest releases. Happy reading!
+            </p>
         </div>
-        <div id="card-container">
-        </div>
+        <div id="card-container"></div>
         <div id="about">
             <h2>About BookSpace</h2>
             <p>
@@ -352,8 +198,21 @@
     </div>
     <script>
         const container = document.getElementById('card-container');
+        const searchInput = document.getElementById('search-input');
+        const searchBtn   = document.getElementById('search-btn');
 
-        function displayCovers(covers){
+        function doSearch() {
+            const query = searchInput.value.trim();
+            if (!query) return;
+            window.location.href = `/view?title=${encodeURIComponent(query)}`;
+        }
+
+        searchBtn.addEventListener('click', doSearch);
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') doSearch();
+        });
+
+        function displayCovers(covers) {
             container.innerHTML = '';
             covers.forEach(manga => {
                 const card = document.createElement('div');
@@ -362,19 +221,21 @@
                     <img src="${manga.cover}" alt="${manga.title}" />
                     <p>${manga.title}</p>
                 `;
+                card.addEventListener('click', () => {
+                    window.location.href = `/reader?id=${manga.id}`;
+                });
                 container.appendChild(card);
             });
         }
 
-        async function fetchCovers(){
+        async function fetchCovers() {
             try {
                 const response = await fetch('/api/covers');
-                const covers = await response.json();
-                console.log(covers);
+                const covers   = await response.json();
                 displayCovers(covers);
             } catch (err) {
-                console.error("Failed to fetch covers:", err);
-                container.innerHTML = `<p>Failed to load covers${err}.</p>`;
+                console.error('Failed to fetch covers:', err);
+                container.innerHTML = `<p>Failed to load covers.</p>`;
             }
         }
 

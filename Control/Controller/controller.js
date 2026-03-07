@@ -11,6 +11,15 @@ const getLoginPage = (req, res) => {
   res.sendFile(path.join(viewsPath2, "loginpage.html"));
 };
 
+const getViewPage = (req, res) => {
+  res.sendFile(path.join(viewsPath2, "viewpage.html"));
+};
+
+const getReaderPage = (req, res) => {
+  res.sendFile(path.join(viewsPath2, "readerpage.html"));
+};
+
+
 const getMangaPage = (req, res) => {
   res.sendFile(path.join(viewsPath, "mangapage.html"));
 };
@@ -30,6 +39,8 @@ const getLightNovelsPage = (req,res) => {
 module.exports = {
   getHomePage,
   getLoginPage,
+  getViewPage,
+  getReaderPage,
   getMangaPage,
   getManhwaPage,
   getComicsPage,

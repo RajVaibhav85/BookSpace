@@ -27,7 +27,7 @@ async function loginUser(req,res) {
             // if session isn't available, still redirect but consider logging
             console.error('Session not available:', e);
         }
-        res.redirect("/home")
+        res.redirect("/")
     }else{
        
         res.status(500).send("login failed");

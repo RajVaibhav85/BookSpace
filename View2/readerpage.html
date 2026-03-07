@@ -298,11 +298,11 @@
 
     <div id="top-bar">
         <div>
-            <p><a href="/home" style="text-decoration: none; color: white;">BookSpace</a></p>
+            <p><a href="/" style="text-decoration: none; color: white;">BookSpace</a></p>
         </div>
         <nav id="nav-bar">
             <ul>
-                <li><a href="/home">Home</a></li>
+                <li><a href="/">Home</a></li>
                 <li><a href="/books">Books</a></li>
                 <li class="dropdown">
             <a href="#">Genre</a>
@@ -325,29 +325,19 @@
   <div id="manga-page">
 
     <div class="manga-info">
-
-      <div class="cover-section">
-        <img src="cover.jpg" alt="Manga Cover" class="cover-image">
-      </div>
-
-      <div class="details-section">
-        <h1 class="manga-title">Hell's Paradise</h1>
-
-        <div class="meta">
-          <span>Genre: Action, Dark Fantasy</span>
-          <span>Status: Completed</span>
-          <span>Chapters: 127</span>
+        <div class="cover-section">
+            <img src="" alt="Manga Cover" class="cover-image" id="cover-img">
         </div>
-
-        <p class="manga-description">
-          Gabimaru the Hollow, a ninja sentenced to death, is offered a chance at pardon.
-          He must travel to a mysterious island and retrieve the elixir of life.
-          But the island hides horrors beyond imagination...
-        </p>
-
-        <button class="read-btn" onclick="loadChapter(1)">Start Reading</button>
-      </div>
-
+        <div class="details-section">
+            <h1 class="manga-title" id="manga-title">Loading...</h1>
+            <div class="meta">
+                <span id="manga-genres"></span>
+                <span id="manga-status"></span>
+                <span id="manga-chapters"></span>
+            </div>
+            <p class="manga-description" id="manga-desc"></p>
+            <button class="read-btn" onclick="loadChapter(1)">Start Reading</button>
+        </div>
     </div>
 
     <div class="chapters-section">
@@ -384,71 +374,124 @@
 
 <script>
 let currentChapter = 1;
-let chapterCount = 127;
+let chapterCount = 0;
 
-const readerSection = document.getElementById("reader");
+const readerSection    = document.getElementById("reader");
 const chapterIndicator = document.getElementById("chapterIndicator");
-const chapterList = document.querySelector(".chapter-list");
-const reader = document.querySelector(".manga-reader");
-const scrollTopBtn = document.getElementById("scrollTopBtn");
-const scrollBottomBtn = document.getElementById("scrollBottomBtn");
-const mangaImages = document.querySelector('.manga-images');
-const readerBtns = document.querySelector('.manga-reader-btns');
-const content = document.getElementById("content");
+const chapterList      = document.querySelector(".chapter-list");
+const mangaImages      = document.querySelector('.manga-images');
+const readerBtns       = document.querySelector('.manga-reader-btns');
+const content          = document.getElementById("content");
+const scrollTopBtn     = document.getElementById("scrollTopBtn");
+const scrollBottomBtn  = document.getElementById("scrollBottomBtn");
 
-function loadChapterList(){
-    let html = "";
-    for(let i = chapterCount; i >= 1; i--){
-        html += `<a href="#" onclick="loadChapter(${i})" class="chapter-item">Chapter ${i}</a>`;
+// ── Get manga ID from URL ─────────────────────────────────────────────────
+const params  = new URLSearchParams(window.location.search);
+const mangaId = params.get('id');
+
+// ── Fetch manga details from your API ────────────────────────────────────
+async function loadMangaDetails() {
+    if (!mangaId) return;
+    try {
+        const res  = await fetch(`/api/${mangaId}`);
+        const data = await res.json();
+
+        document.getElementById('cover-img').src          = data.cover || '';
+        document.getElementById('cover-img').alt          = data.title;
+        document.getElementById('manga-title').textContent = data.title;
+        document.getElementById('manga-status').textContent = `Status: ${data.status || 'N/A'}`;
+        document.getElementById('manga-genres').textContent = data.tags?.length
+            ? `Genre: ${data.tags.slice(0, 3).join(', ')}`
+            : '';
+        document.getElementById('manga-desc').textContent  = data.description || 'No description available.';
+
+        // Fetch chapter count from MangaDex
+        const chapRes  = await fetch(`https://api.mangadex.org/manga/${mangaId}/aggregate?translatedLanguage[]=en`);
+        const chapData = await chapRes.json();
+        const volumes  = Object.values(chapData.volumes || {});
+        chapterCount   = volumes.reduce((sum, v) => sum + Object.keys(v.chapters || {}).length, 0);
+
+        document.getElementById('manga-chapters').textContent = `Chapters: ${chapterCount}`;
+        loadChapterList();
+
+    } catch (err) {
+        console.error('Failed to load manga details:', err);
     }
-    chapterList.innerHTML += html;
 }
 
-function loadChapter(index) {
+// ── Fetch chapter images from MangaDex ───────────────────────────────────
+async function loadChapter(index) {
     currentChapter = index;
     chapterIndicator.textContent = `Chapter ${index}`;
-    readerSection.style.display = "block";
-    const mangaImagesDiv = document.querySelector('.manga-images');
-    mangaImagesDiv.innerHTML = "";
-    for(let i = 1; i <= 20; i++) {
-        const img = document.createElement('img');
-        img.src = `../Books/HellsParadise/page-${i.toString().padStart(2, '0')}.jpg`;
-        img.loading = 'lazy';
-        mangaImagesDiv.appendChild(img);
+    readerSection.style.display  = 'block';
+    mangaImages.innerHTML        = '<p style="color:white;text-align:center">Loading pages...</p>';
+
+    try {
+        // 1. Get chapter list for this manga
+        const listRes  = await fetch(
+            `https://api.mangadex.org/manga/${mangaId}/feed?translatedLanguage[]=en&order[chapter]=asc&limit=500`
+        );
+        const listData = await listRes.json();
+        const chapter  = listData.data.find(c => c.attributes.chapter == index);
+
+        if (!chapter) {
+            mangaImages.innerHTML = '<p style="color:white;text-align:center">Chapter not found.</p>';
+            return;
+        }
+
+        // 2. Get page image URLs
+        const pagesRes  = await fetch(`https://api.mangadex.org/at-home/server/${chapter.id}`);
+        const pagesData = await pagesRes.json();
+        const baseUrl   = pagesData.baseUrl;
+        const hash      = pagesData.chapter.hash;
+        const pages     = pagesData.chapter.data;
+
+        mangaImages.innerHTML = '';
+        pages.forEach(page => {
+            const img    = document.createElement('img');
+            img.src      = `${baseUrl}/data/${hash}/${page}`;
+            img.loading  = 'lazy';
+            mangaImages.appendChild(img);
+        });
+
+        content.scrollTo({ top: 0, behavior: 'smooth' });
+
+    } catch (err) {
+        mangaImages.innerHTML = `<p style="color:white;text-align:center">Failed to load chapter.</p>`;
+        console.error(err);
+    }
+}
+
+function loadChapterList() {
+    chapterList.innerHTML = '';
+    for (let i = chapterCount; i >= 1; i--) {
+        const a = document.createElement('a');
+        a.href      = '#';
+        a.className = 'chapter-item';
+        a.textContent = `Chapter ${i}`;
+        a.addEventListener('click', (e) => { e.preventDefault(); loadChapter(i); });
+        chapterList.appendChild(a);
     }
 }
 
 document.getElementById("nextChapter").addEventListener("click", () => {
-    if (currentChapter < chapterCount) {
-        currentChapter++;
-        loadChapter(currentChapter);
-    }
+    if (currentChapter < chapterCount) loadChapter(++currentChapter);
 });
-
 document.getElementById("prevChapter").addEventListener("click", () => {
-    if (currentChapter > 1) {
-        currentChapter--;
-        loadChapter(currentChapter);
-    }
+    if (currentChapter > 1) loadChapter(--currentChapter);
 });
 
-scrollTopBtn.addEventListener("click", () => {
-    content.scrollTo({ top: 0, behavior: "smooth" });
-});
-
-scrollBottomBtn.addEventListener("click", () => {
-    content.scrollTo({ top: content.scrollHeight, behavior: "smooth" });
-});
+scrollTopBtn.addEventListener("click", () => content.scrollTo({ top: 0, behavior: "smooth" }));
+scrollBottomBtn.addEventListener("click", () => content.scrollTo({ top: content.scrollHeight, behavior: "smooth" }));
 
 content.addEventListener("scroll", () => {
     if (readerSection.style.display === "none") return;
-    const rect = mangaImages.getBoundingClientRect();
+    const rect      = mangaImages.getBoundingClientRect();
     const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
     readerBtns.style.display = isVisible ? "flex" : "none";
 });
 
-
-loadChapterList();
+loadMangaDetails();
 
 </script>
 
