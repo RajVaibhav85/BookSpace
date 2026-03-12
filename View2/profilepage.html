@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<head>
+    <title>BookSpace – Profile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(160deg, #000000 0%, #2a0a40 45%, #0b1c3d 100%);
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --bg-border: 1px solid rgba(255, 255, 255, 0.15);
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-hover: rgba(255, 255, 255, 0.09);
+            --accent: #b57bee;
+            --accent2: #5b8dee;
+            --text-muted: rgba(255, 255, 255, 0.55);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
+        html, body {
+            margin: 0; padding: 0;
+            font-family: Arial, sans-serif;
+            color: white;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+
+        /* ── TOP BAR ── */
+        #top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            z-index: 100;
+            background: transparent;
+        }
+        #top-bar p { margin: 0; font-size: 28px; }
+        #top-bar a { text-decoration: none; color: white; }
+
+        nav { background: transparent; padding: 15px 30px; }
+        nav ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 20px; flex-wrap: wrap; }
+        nav a { text-decoration: none; color: white; font-weight: 500; font-size: 20px; transition: 0.3s; }
+        nav a:hover { opacity: 0.7; }
+
+        .dropdown { position: relative; }
+        .dropdown-menu {
+            position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+            list-style: none; padding: 12px; margin: 0;
+            background: rgba(0, 0, 0, 0.55);
+            border: var(--bg-border);
+            backdrop-filter: blur(18px);
+            border-radius: 8px;
+            display: none;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2px 8px; min-width: 520px;
+        }
+        .dropdown-menu li { padding: 6px 10px; white-space: nowrap; }
+        .dropdown-menu a { font-size: 14px; display: block; }
+        .dropdown:hover .dropdown-menu { display: grid; }
+
+        /* ── PAGE GRID ── */
+        #page {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 24px 20px 60px;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+        }
+
+        /* ── GLASS CARD ── */
+        .glass-card {
+            background: var(--glass);
+            border: var(--bg-border);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 16px;
+            padding: 24px;
+            transition: background 0.25s;
+        }
+        .glass-card:hover { background: var(--glass-hover); }
+
+        /* ── SIDEBAR ── */
+        #sidebar {
+            grid-column: 1;
+            grid-row: 1 / 3;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .avatar-wrap {
+            position: relative;
+            width: 100px; height: 100px;
+            margin: 0 auto 14px;
+        }
+        .avatar-ring {
+            position: absolute; inset: -4px;
+            border-radius: 50%;
+            background: conic-gradient(var(--accent), var(--accent2), var(--accent));
+            z-index: 0;
+            animation: spin 6s linear infinite;
+            opacity: 0.75;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .avatar {
+            position: relative; z-index: 1;
+            width: 100px; height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2a0a40, #0b1c3d);
+            border: 2px solid rgba(255,255,255,0.2);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 30px; font-weight: 700; letter-spacing: 1px;
+            color: rgba(255,255,255,0.85);
+        }
+
+        .user-name {
+            text-align: center; font-size: 20px;
+            font-weight: 700; letter-spacing: 0.5px; margin: 0 0 4px;
+        }
+        .user-handle {
+            text-align: center; font-size: 13px;
+            color: var(--text-muted); margin: 0 0 16px;
+        }
+        .badge {
+            display: inline-block; padding: 2px 8px; border-radius: 99px;
+            font-size: 11px; font-weight: 700;
+            background: rgba(181,123,238,0.25); color: var(--accent);
+        }
+
+        .info-row {
+            display: flex; align-items: flex-start; gap: 10px;
+            padding: 10px 0; border-bottom: var(--bg-border); font-size: 14px;
+        }
+        .info-row:last-child { border-bottom: none; }
+        .info-label { color: var(--text-muted); min-width: 62px; }
+        .info-value { color: white; word-break: break-all; }
+
+        .bio-text {
+            font-size: 13px; line-height: 1.7;
+            color: rgba(255,255,255,0.75); margin: 14px 0 0;
+        }
+
+        .stats-strip {
+            display: flex; justify-content: space-around;
+            text-align: center; padding: 10px 0;
+        }
+        .stat-val { font-size: 24px; font-weight: 700; }
+        .stat-lbl { font-size: 11px; color: var(--text-muted); margin-top: 3px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .btn-group { display: flex; flex-direction: column; gap: 10px; }
+        .btn {
+            width: 100%; padding: 11px 0; border-radius: 40px; border: none;
+            cursor: pointer; font-size: 14px; font-family: Arial, sans-serif;
+            font-weight: 700; letter-spacing: 0.5px; transition: all 0.25s;
+        }
+        .btn-primary { background: linear-gradient(90deg, var(--accent), var(--accent2)); color: white; }
+        .btn-primary:hover { opacity: 0.85; transform: translateY(-1px); }
+        .btn-ghost { background: transparent; border: var(--bg-border); color: white; }
+        .btn-ghost:hover { background: rgba(255,255,255,0.08); transform: translateY(-1px); }
+        .btn-danger { background: transparent; border: 1px solid rgba(255,80,80,0.4); color: rgba(255,120,120,0.9); }
+        .btn-danger:hover { background: rgba(255,50,50,0.1); }
+
+        /* ── MAIN ── */
+        #main { grid-column: 2; display: flex; flex-direction: column; gap: 20px; }
+
+        .section-title {
+            font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+            color: var(--text-muted); margin: 0 0 16px;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .section-title::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.1); }
+
+        .tab-row { display: flex; gap: 8px; flex-wrap: wrap; }
+        .tab-btn {
+            padding: 7px 18px; border-radius: 30px; border: var(--bg-border);
+            background: transparent; color: rgba(255,255,255,0.6);
+            font-size: 13px; font-family: Arial, sans-serif; cursor: pointer; transition: all 0.2s;
+        }
+        .tab-btn.active { background: linear-gradient(90deg, var(--accent), var(--accent2)); color: white; border-color: transparent; }
+        .tab-btn:hover:not(.active) { background: rgba(255,255,255,0.07); color: white; }
+
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        .recent-list { display: flex; flex-direction: column; gap: 12px; }
+        .recent-item {
+            display: flex; gap: 14px; align-items: center;
+            padding: 10px 12px; border-radius: 10px;
+            background: rgba(255,255,255,0.025); border: var(--bg-border);
+            transition: background 0.2s, transform 0.2s; cursor: pointer;
+        }
+        .recent-item:hover { background: rgba(255,255,255,0.07); transform: translateX(4px); }
+        .recent-cover {
+            width: 44px; height: 62px; border-radius: 5px; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; font-weight: 700; letter-spacing: 0.5px;
+            color: rgba(255,255,255,0.85);
+        }
+        .recent-info { flex: 1; min-width: 0; }
+        .recent-title { font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .recent-meta { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+        .recent-progress { width: 100%; height: 3px; border-radius: 99px; background: rgba(255,255,255,0.1); margin-top: 8px; overflow: hidden; }
+        .recent-progress-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+        .recent-chapter { font-size: 12px; color: var(--text-muted); flex-shrink: 0; }
+
+        .liked-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 14px; }
+        .liked-card {
+            border-radius: 10px; overflow: hidden;
+            background: rgba(255,255,255,0.03); border: var(--bg-border);
+            cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .liked-card:hover { transform: translateY(-5px); box-shadow: 0 12px 30px rgba(181,123,238,0.2); }
+        .liked-cover {
+            width: 100%; aspect-ratio: 2/3;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; font-weight: 700; letter-spacing: 0.5px;
+            color: rgba(255,255,255,0.85);
+        }
+        .liked-title { font-size: 11px; padding: 6px 8px; line-height: 1.4; }
+
+        .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+        .form-group label { font-size: 11px; color: var(--text-muted); letter-spacing: 0.5px; text-transform: uppercase; }
+        .form-group input, .form-group textarea {
+            background: rgba(255,255,255,0.05); border: var(--bg-border);
+            border-radius: 8px; padding: 10px 14px;
+            color: white; font-size: 14px; font-family: Arial, sans-serif;
+            transition: border-color 0.2s, background 0.2s; outline: none; width: 100%;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: rgba(181,123,238,0.5); background: rgba(255,255,255,0.08);
+        }
+        .form-group textarea { resize: vertical; }
+        .form-row { display: flex; gap: 12px; }
+        .form-row .form-group { flex: 1; }
+
+        #strength-bar { height: 100%; border-radius: 99px; width: 0%; transition: width 0.4s, background 0.4s; }
+
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+        .glass-card { animation: fadeUp 0.45s ease both; }
+        #sidebar .glass-card:nth-child(1) { animation-delay: 0.05s; }
+        #sidebar .glass-card:nth-child(2) { animation-delay: 0.12s; }
+        #sidebar .glass-card:nth-child(3) { animation-delay: 0.19s; }
+        #main > *:nth-child(1) { animation-delay: 0.22s; }
+        #main > *:nth-child(2) { animation-delay: 0.30s; }
+        #main > *:nth-child(3) { animation-delay: 0.38s; }
+
+        @media(max-width: 768px) {
+            #page { grid-template-columns: 1fr; }
+            #sidebar { grid-column: 1; grid-row: auto; }
+            #main { grid-column: 1; }
+            .form-row { flex-direction: column; }
+            #top-bar { flex-direction: column; gap: 10px; align-items: center; }
+            nav ul { flex-wrap: wrap; justify-content: center; }
+            #top-bar p { font-size: 20px; }
+            nav a { font-size: 16px; }
+            .dropdown-menu { grid-template-columns: repeat(2, 1fr); min-width: 260px; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="top-bar">
+    <div><p><a href="/">BookSpace</a></p></div>
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/books">Books</a></li>
+            <li class="dropdown">
+                <a href="#">Genre</a>
+                <ul class="dropdown-menu">
+                    <li><a href="/view?genre=Action">Action</a></li>
+                    <li><a href="/view?genre=Adventure">Adventure</a></li>
+                    <li><a href="/view?genre=Comedy">Comedy</a></li>
+                    <li><a href="/view?genre=Crime">Crime</a></li>
+                    <li><a href="/view?genre=Drama">Drama</a></li>
+                    <li><a href="/view?genre=Fantasy">Fantasy</a></li>
+                    <li><a href="/view?genre=Historical">Historical</a></li>
+                    <li><a href="/view?genre=Horror">Horror</a></li>
+                    <li><a href="/view?genre=Isekai">Isekai</a></li>
+                    <li><a href="/view?genre=Mahou+Shoujo">Mahou Shoujo</a></li>
+                    <li><a href="/view?genre=Mecha">Mecha</a></li>
+                    <li><a href="/view?genre=Medical">Medical</a></li>
+                    <li><a href="/view?genre=Mystery">Mystery</a></li>
+                    <li><a href="/view?genre=Philosophical">Philosophical</a></li>
+                    <li><a href="/view?genre=Psychological">Psychological</a></li>
+                    <li><a href="/view?genre=Romance">Romance</a></li>
+                    <li><a href="/view?genre=Sci-Fi">Sci-Fi</a></li>
+                    <li><a href="/view?genre=Slice+of+Life">Slice of Life</a></li>
+                    <li><a href="/view?genre=Sports">Sports</a></li>
+                    <li><a href="/view?genre=Superhero">Superhero</a></li>
+                    <li><a href="/view?genre=Supernatural">Supernatural</a></li>
+                    <li><a href="/view?genre=Thriller">Thriller</a></li>
+                    <li><a href="/view?genre=Tragedy">Tragedy</a></li>
+                    <li><a href="/view?genre=Wuxia">Wuxia</a></li>
+                </ul>
+            </li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/profile" style="color:var(--accent);">Profile</a></li>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+    </nav>
+</div>
+
+<div id="page">
+
+    <aside id="sidebar">
+
+        <div class="glass-card" style="text-align:center;">
+            <div class="avatar-wrap">
+                <div class="avatar-ring"></div>
+                <div class="avatar">AR</div>
+            </div>
+            <p class="user-name">Arjun Reddy</p>
+            <p class="user-handle">@arjun.reads &nbsp;<span class="badge">Pro</span></p>
+            <div style="text-align:left;">
+                <div class="info-row">
+                    <span class="info-label">Email</span>
+                    <span class="info-value">arjun@example.com</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">From</span>
+                    <span class="info-value">Hyderabad, IN</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Joined</span>
+                    <span class="info-value">March 2024</span>
+                </div>
+            </div>
+            <p class="bio-text">
+                Manga enthusiast and light novel hoarder. Isekai is life.
+                Currently reading way too many series at once.
+            </p>
+        </div>
+
+        <div class="glass-card">
+            <div class="stats-strip">
+                <div><div class="stat-val">142</div><div class="stat-lbl">Reading</div></div>
+                <div><div class="stat-val">87</div><div class="stat-lbl">Liked</div></div>
+                <div><div class="stat-val">23</div><div class="stat-lbl">Finished</div></div>
+            </div>
+        </div>
+
+        <div class="glass-card">
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="showTab('edit')">Edit Profile</button>
+                <button class="btn btn-ghost" onclick="showTab('password')">Change Password</button>
+                <button class="btn btn-danger">Delete Account</button>
+            </div>
+        </div>
+
+    </aside>
+
+    <main id="main">
+
+        <div class="glass-card" style="padding:16px 20px;">
+            <div class="tab-row">
+                <button class="tab-btn active" onclick="switchTab('recents',this)">Recents</button>
+                <button class="tab-btn" onclick="switchTab('liked',this)">Liked</button>
+                <button class="tab-btn" onclick="switchTab('edit',this)">Edit Profile</button>
+                <button class="tab-btn" onclick="switchTab('password',this)">Password</button>
+            </div>
+        </div>
+
+        <div class="glass-card tab-panel active" id="tab-recents">
+            <p class="section-title">Continue Reading</p>
+            <div class="recent-list" id="recent-list"></div>
+        </div>
+
+        <div class="glass-card tab-panel" id="tab-liked">
+            <p class="section-title">Liked Books</p>
+            <div class="liked-grid" id="liked-grid"></div>
+        </div>
+
+        <div class="glass-card tab-panel" id="tab-edit">
+            <p class="section-title">Edit Profile</p>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Display Name</label>
+                    <input type="text" value="Arjun Reddy">
+                </div>
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" value="arjun.reads">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" value="arjun@example.com">
+            </div>
+            <div class="form-group">
+                <label>Location</label>
+                <input type="text" value="Hyderabad, IN">
+            </div>
+            <div class="form-group">
+                <label>Bio</label>
+                <textarea rows="3">Manga enthusiast and light novel hoarder. Isekai is life. Currently reading way too many series at once.</textarea>
+            </div>
+            <div style="display:flex;gap:10px;margin-top:6px;">
+                <button class="btn btn-primary" style="width:auto;padding:10px 28px;">Save Changes</button>
+                <button class="btn btn-ghost" style="width:auto;padding:10px 28px;">Cancel</button>
+            </div>
+        </div>
+
+        <div class="glass-card tab-panel" id="tab-password">
+            <p class="section-title">Change Password</p>
+            <div class="form-group">
+                <label>Current Password</label>
+                <input type="password" placeholder="Enter current password">
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>New Password</label>
+                    <input type="password" placeholder="New password" oninput="checkStrength(this.value)">
+                </div>
+                <div class="form-group">
+                    <label>Confirm Password</label>
+                    <input type="password" placeholder="Repeat new password">
+                </div>
+            </div>
+            <div style="margin-bottom:16px;">
+                <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+                    <span style="font-size:12px;color:var(--text-muted);">Password strength</span>
+                    <span style="font-size:12px;" id="strength-label">—</span>
+                </div>
+                <div style="height:4px;border-radius:99px;background:rgba(255,255,255,0.1);">
+                    <div id="strength-bar"></div>
+                </div>
+            </div>
+            <button class="btn btn-primary" style="width:auto;padding:10px 28px;">Update Password</button>
+        </div>
+
+    </main>
+</div>
+
+<script>
+    function switchTab(name, btn) {
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('tab-' + name).classList.add('active');
+        btn.classList.add('active');
+    }
+    function showTab(name) {
+        const btn = [...document.querySelectorAll('.tab-btn')]
+            .find(b => b.getAttribute('onclick').includes("'" + name + "'"));
+        if (btn) switchTab(name, btn);
+    }
+
+    function checkStrength(v) {
+        const bar = document.getElementById('strength-bar');
+        const lbl = document.getElementById('strength-label');
+        let score = 0;
+        if (v.length >= 8) score++;
+        if (/[A-Z]/.test(v)) score++;
+        if (/[0-9]/.test(v)) score++;
+        if (/[^A-Za-z0-9]/.test(v)) score++;
+        const levels = [
+            { w:'0%',   c:'transparent', t:'—' },
+            { w:'25%',  c:'#e05050',     t:'Weak' },
+            { w:'50%',  c:'#e09a30',     t:'Fair' },
+            { w:'75%',  c:'#5b8dee',     t:'Good' },
+            { w:'100%', c:'#5de06a',     t:'Strong' }
+        ];
+        const l = levels[score];
+        bar.style.width = l.w;
+        bar.style.background = l.c;
+        lbl.textContent = l.t;
+        lbl.style.color = l.c;
+    }
+
+    const palette = [
+        ['#3a0a55','#6a1a8a'], ['#0a2a55','#1a4a8a'],
+        ['#552a0a','#8a4a1a'], ['#0a4a3a','#1a7a5a'],
+        ['#3a3a0a','#6a6a1a'], ['#4a0a2a','#8a1a4a'],
+        ['#0a3a4a','#1a6a7a'], ['#1a0a4a','#3a1a8a'],
+        ['#0a4a1a','#1a7a3a'], ['#4a1a0a','#8a3a1a'],
+    ];
+    function coverStyle(i) {
+        const [a,b] = palette[i % palette.length];
+        return `background:linear-gradient(135deg,${a},${b})`;
+    }
+    function initials(t) {
+        return t.split(' ').slice(0,2).map(w => w[0]).join('').toUpperCase();
+    }
+
+    const recents = [
+        { title:'Solo Leveling',  genre:'Action · Fantasy',         ch:'Ch. 182', prog:91 },
+        { title:'Horimiya',       genre:'Romance · Slice of Life',  ch:'Ch. 74',  prog:62 },
+        { title:'Mushoku Tensei', genre:'Isekai · Fantasy',         ch:'Vol. 11', prog:38 },
+        { title:'Monster',        genre:'Psychological · Thriller', ch:'Ch. 55',  prog:55 },
+        { title:'Haikyuu!!',      genre:'Sports · Drama',           ch:'Ch. 200', prog:78 },
+    ];
+    const rl = document.getElementById('recent-list');
+    recents.forEach((r,i) => {
+        rl.innerHTML += `
+        <div class="recent-item">
+            <div class="recent-cover" style="${coverStyle(i)}">${initials(r.title)}</div>
+            <div class="recent-info">
+                <div class="recent-title">${r.title}</div>
+                <div class="recent-meta">${r.genre}</div>
+                <div class="recent-progress"><div class="recent-progress-fill" style="width:${r.prog}%"></div></div>
+            </div>
+            <div class="recent-chapter">${r.ch}</div>
+        </div>`;
+    });
+
+    const liked = [
+        'Solo Leveling','One Piece','Berserk','Death Note','Horimiya',
+        'Re:Zero','Fairy Tail','Monster','Vinland Saga','Haikyuu!!'
+    ];
+    const lg = document.getElementById('liked-grid');
+    liked.forEach((title,i) => {
+        lg.innerHTML += `
+        <div class="liked-card">
+            <div class="liked-cover" style="${coverStyle(i+3)}">${initials(title)}</div>
+            <div class="liked-title">${title}</div>
+        </div>`;
+    });
+</script>
+</body>
