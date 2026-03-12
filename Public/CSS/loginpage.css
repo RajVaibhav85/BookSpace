@@ -238,7 +238,7 @@ i{
   display: flex;
   flex-direction: row;
   margin: 25px;
-  transition:  transform 1s ease, width 1s ease;
+  transition:  transform 0.5s ease, width 0.5s ease;
   width: 100%;
 }
 .IntroCard:hover{
