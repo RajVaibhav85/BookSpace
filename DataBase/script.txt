@@ -1,0 +1,33 @@
+DROP TABLE registration ;
+CREATE TABLE registration (
+    user_id SERIAL PRIMARY KEY,
+    username TEXT NOT NULL UNIQUE,
+    password TEXT NOT NULL,
+    email TEXT NOT NULL ,
+    displayname TEXT,
+    location TEXT,
+    joined DATE,
+    reading INT,
+    finished INT,
+    liked INT,
+    bio TEXT
+);
+CREATE TABLE feedback (
+    rating INT CHECK (rating BETWEEN 1 AND 5),
+    comment TEXT NULL,
+    user_id INT REFERENCES registration(user_id),
+    bookid TEXT ,
+    time TIMESTAMP,
+    date DATE
+);
+CREATE TABLE history (
+    user_id INT REFERENCES registration(user_id),
+    book_id TEXT,
+    viewed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE library (
+    book_id TEXT,
+    user_id INT REFERENCES registration(user_id),
+    bookmark INT,
+    joined_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

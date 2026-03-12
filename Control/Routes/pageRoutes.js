@@ -7,7 +7,7 @@ const { ensureAuthenticated } = require("../middleware/auth");
 
 router.get("/", ensureAuthenticated, pageController.getHomePage);
 router.get("/login", pageController.getLoginPage);
-router.get("/view", pageController.getViewPage);
-router.get("/reader", pageController.getReaderPage);
+router.get("/view", ensureAuthenticated, pageController.getViewPage);
+router.get("/reader", ensureAuthenticated, pageController.getReaderPage);
 
 module.exports = router;

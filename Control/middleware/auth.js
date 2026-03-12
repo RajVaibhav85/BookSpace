@@ -3,6 +3,7 @@ function ensureAuthenticated(req, res, next) {
     return next();
   }
   // Not authenticated - redirect to login page
+  
   return res.redirect('/login');
 }
 

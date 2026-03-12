@@ -134,6 +134,13 @@
     </div>
 
     <script>
+        /*  Usage template
+            const params = new URLSearchParams({
+                code: '401',
+                message : "Authentication failed. Invalid credentials."
+            }).toString();
+            res.status(401).redirect(`/errorpage.html?${params}`)  
+        */
         const ERROR_COPY = {
             400: { title: "Bad Request",           message: "The server couldn't understand your request." },
             401: { title: "Unauthorised",          message: "You need to be signed in to view this page." },
@@ -145,6 +152,7 @@
             502: { title: "Bad Gateway",           message: "Our server received an invalid response. Try again shortly." },
             503: { title: "Service Unavailable",   message: "BookSpace is temporarily down for maintenance." },
             504: { title: "Gateway Timeout",       message: "The upstream server didn't respond in time." },
+            
         };
 
         (function init() {
