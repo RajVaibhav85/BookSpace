@@ -238,7 +238,8 @@ i{
   display: flex;
   flex-direction: row;
   margin: 25px;
-  transition: transform 0.2 ease;
+  transition:  transform 1s ease, width 1s ease;
+  width: 100%;
 }
 .IntroCard:hover{
   background-color: rgba(6, 4, 2, 0.841);
@@ -247,7 +248,7 @@ i{
   margin: 25px;
   transform: translateY(-20px);
   box-shadow: 10px 10px 20px rgb(0, 0, 0);
-  width: 80%;
+  width: 120%;
 }
 
 #IntroImages{
