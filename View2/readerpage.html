@@ -356,6 +356,8 @@
             </div>
             <div class="manga-reader-btns">
                 <button id="scrollTopBtn" class="scroll-btn">⬆</button>
+                <button id="bookmarkBtn" class="scroll-btn"><img src="bookmark-icon.png" alt="Bookmark"></button>
+                <button id="downloadBtn" class="scroll-btn"><img src="download-icon.png" alt="Download"></button>
                 <button id="scrollBottomBtn" class="scroll-btn">⬇</button>
             </div>
         </div>
@@ -473,6 +475,50 @@ function loadChapterList() {
         chapterList.appendChild(a);
     }
 }
+
+async function downloadChapter() {
+    const btn = document.getElementById('downloadBtn');
+    const title = document.getElementById('manga-title').textContent.trim();
+
+    // Show loading state
+    btn.querySelector('img').src = 'sandclock-icon.png';
+    btn.disabled = true;
+    btn.style.opacity = '0.5';
+
+    try {
+        // 1. Get chapter ID from MangaDex
+        const listRes  = await fetch(
+            `https://api.mangadex.org/manga/${mangaId}/feed?translatedLanguage[]=en&order[chapter]=asc&limit=500`
+        );
+        const listData = await listRes.json();
+        const chapter  = listData.data.find(c => c.attributes.chapter == currentChapter);
+
+        if (!chapter) { alert('Chapter not found!'); return; }
+
+        // 2. Call your backend to generate PDF
+        const res = await fetch(
+            `/api/chapter/${chapter.id}/download?title=${encodeURIComponent(title)}`
+        );
+        if (!res.ok) throw new Error((await res.json()).error || 'Server error');
+
+        // 3. Trigger download
+        const blob = await res.blob();
+        const a    = document.createElement('a');
+        a.href     = URL.createObjectURL(blob);
+        a.download = `${title}-Chapter-${currentChapter}.pdf`;
+        a.click();
+        URL.revokeObjectURL(a.href);
+
+    } catch (err) {
+        alert('Download failed: ' + err.message);
+    } finally {
+        btn.querySelector('img').src = 'download-icon.png';
+        btn.disabled = false;
+        btn.style.opacity = '1';
+    }
+}
+
+document.getElementById('downloadBtn').addEventListener('click', downloadChapter);
 
 document.getElementById("nextChapter").addEventListener("click", () => {
     if (currentChapter < chapterCount) loadChapter(++currentChapter);
