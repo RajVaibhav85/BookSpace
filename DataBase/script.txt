@@ -29,5 +29,6 @@ CREATE TABLE library (
     book_id TEXT,
     user_id INT REFERENCES registration(user_id),
     bookmark INT,
-    joined_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    joined_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (book_id, user_id)
 );
