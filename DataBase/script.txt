@@ -31,3 +31,8 @@ CREATE TABLE library (
     bookmark INT,
     joined_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+16/3/26
+
+ALTER TABLE feedback
+ADD CONSTRAINT unique_feedback UNIQUE(user_id, bookid);
