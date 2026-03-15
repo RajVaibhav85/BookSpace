@@ -30,6 +30,7 @@
 // 
 
 const BASE_URL = 'https://api.mangadex.org';
+const { PDFDocument } = require('pdf-lib');
 
 // ─── Helper ────────────────────────────────────────────────────────────────
 
@@ -250,10 +251,48 @@ const getMangaById = async (req, res) => {
     }
 };
 
+const downloadChapter = async (req, res) => {
+    const { chapterId } = req.params;
+    const title = req.query.title || 'manga';
+
+    try {
+        const serverRes  = await fetch(`https://api.mangadex.org/at-home/server/${chapterId}`);
+        const serverData = await serverRes.json();
+
+        const baseUrl = serverData.baseUrl;
+        const hash    = serverData.chapter.hash;
+        const pages   = serverData.chapter.data;
+
+        const pdfDoc = await PDFDocument.create();
+
+        for (const page of pages) {
+            const imgRes    = await fetch(`${baseUrl}/data/${hash}/${page}`);
+            const imgBuffer = await imgRes.arrayBuffer();
+
+            const img      = page.endsWith('.png')
+                ? await pdfDoc.embedPng(imgBuffer)
+                : await pdfDoc.embedJpg(imgBuffer);
+
+            const pdfPage  = pdfDoc.addPage([img.width, img.height]);
+            pdfPage.drawImage(img, { x: 0, y: 0, width: img.width, height: img.height });
+        }
+
+        const pdfBytes = await pdfDoc.save();
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename="${title}.pdf"`);
+        res.send(Buffer.from(pdfBytes));
+
+    } catch (err) {
+        console.error('PDF generation error:', err.message);
+        res.status(500).json({ error: err.message });
+    }
+};
+
 module.exports = {
     getCovers,
     searchByTitle,
     searchByGenre,
+    downloadChapter,
     searchByStatus,
     getMangaById,
 };

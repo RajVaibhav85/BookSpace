@@ -7,5 +7,6 @@ router.get('/search', apiController.searchByTitle);
 router.get('/search/genre', apiController.searchByGenre);   // GET /manga/search/genre?genres=Action,Romance&exclude=Harem
 router.get('/search/status', apiController.searchByStatus);
 router.get('/:id', apiController.getMangaById);
+router.get('/chapter/:chapterId/download', apiController.downloadChapter);
 
 module.exports = router;
