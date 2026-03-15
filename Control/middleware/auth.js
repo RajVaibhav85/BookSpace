@@ -1,5 +1,5 @@
 function ensureAuthenticated(req, res, next) {
-  if (req && req.session && req.session.user) {
+  if (req && req.session && req.session.userId) {
     return next();
   }
   // Not authenticated - redirect to login page

@@ -26,7 +26,7 @@ async function loginUser(req,res) {
     if(result.rows.length>0){
         // set a session value so the user is considered authenticated
         try{
-            req.session.user = { id: result.rows[0].id || result.rows[0].name, name: result.rows[0].name };
+            req.session.userId = result.rows[0].user_id;
         }catch(e){
             // if session isn't available, still redirect but consider logging
             console.error('Session not available:', e);
