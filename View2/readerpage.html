@@ -318,6 +318,7 @@
 
                 <li><a href="/about">About</a></li>
                 <li><a href="/profile">Profile</a></li>
+                <li><a href="/user/logout">Logout</a></li>
             </ul>
         </nav>
     </div>
@@ -517,6 +518,33 @@ async function downloadChapter() {
         btn.style.opacity = '1';
     }
 }
+
+const setBookmark = async (req, res) => {
+    const userId = req.session.userId;
+    if (!userId) return res.status(401).json({ error: 'Not logged in' });
+
+    const { mangaId, chapter } = req.body;
+    console.log('Bookmark request:', { userId, mangaId, chapter });
+
+    if (!mangaId || chapter === undefined)
+        return res.status(400).json({ error: 'Missing mangaId or chapter' });
+
+    try {
+        await pool.query(
+            `INSERT INTO library (book_id, user_id, bookmark)
+             VALUES ($1, $2, $3)
+             ON CONFLICT ON CONSTRAINT library_unique
+             DO UPDATE SET bookmark = $3, joined_on = CURRENT_TIMESTAMP`,
+            [mangaId, userId, chapter]
+        );
+        res.json({ success: true });
+    } catch (err) {
+        console.error('Bookmark DB error:', err.message);
+        res.status(500).json({ error: err.message });
+    }
+};
+
+module.exports = { logout, setBookmark };
 
 document.getElementById('downloadBtn').addEventListener('click', downloadChapter);
 
