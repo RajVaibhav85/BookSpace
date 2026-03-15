@@ -357,8 +357,8 @@
             </div>
             <div class="manga-reader-btns">
                 <button id="scrollTopBtn" class="scroll-btn">⬆</button>
-                <button id="bookmarkBtn" class="scroll-btn"><img src="bookmark-icon.png" alt="Bookmark"></button>
-                <button id="downloadBtn" class="scroll-btn"><img src="download-icon.png" alt="Download"></button>
+                <button id="bookmarkBtn" class="scroll-btn"><img src="bookmark-icon.png"></button>
+                <button id="downloadBtn" class="scroll-btn"><img src="download-icon.png"></button>
                 <button id="scrollBottomBtn" class="scroll-btn">⬇</button>
             </div>
         </div>
@@ -519,32 +519,39 @@ async function downloadChapter() {
     }
 }
 
-const setBookmark = async (req, res) => {
-    const userId = req.session.userId;
-    if (!userId) return res.status(401).json({ error: 'Not logged in' });
-
-    const { mangaId, chapter } = req.body;
-    console.log('Bookmark request:', { userId, mangaId, chapter });
-
-    if (!mangaId || chapter === undefined)
-        return res.status(400).json({ error: 'Missing mangaId or chapter' });
+async function bookmarkChapter() {
+    const btn = document.getElementById('bookmarkBtn');
+    btn.querySelector('img').src = 'sandclock-icon.png';
+    btn.disabled = true;
+    btn.style.opacity = '0.5';
 
     try {
-        await pool.query(
-            `INSERT INTO library (book_id, user_id, bookmark)
-             VALUES ($1, $2, $3)
-             ON CONFLICT ON CONSTRAINT library_unique
-             DO UPDATE SET bookmark = $3, joined_on = CURRENT_TIMESTAMP`,
-            [mangaId, userId, chapter]
-        );
-        res.json({ success: true });
-    } catch (err) {
-        console.error('Bookmark DB error:', err.message);
-        res.status(500).json({ error: err.message });
-    }
-};
+        const res = await fetch('/user/setBookmark', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ mangaId, chapter: currentChapter })
+        });
 
-module.exports = { logout, setBookmark };
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Server error');
+
+        // Show bookmarked icon briefly
+        btn.querySelector('img').src = 'bookmarked-icon.png';
+        setTimeout(() => {
+            btn.querySelector('img').src = 'bookmark-icon.png';
+            btn.disabled = false;
+            btn.style.opacity = '1';
+        }, 2000);
+
+    } catch (err) {
+        alert('Bookmark failed: ' + err.message);
+        btn.querySelector('img').src = 'bookmark-icon.png';
+        btn.disabled = false;
+        btn.style.opacity = '1';
+    }
+}
+
+document.getElementById('bookmarkBtn').addEventListener('click', bookmarkChapter);
 
 document.getElementById('downloadBtn').addEventListener('click', downloadChapter);
 
