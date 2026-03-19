@@ -1,5 +1,6 @@
-const { getFeedbackByBook } = require("../../DataBase/FeedbackPSQL");
+const { getFeedbackByBook, addFeedback } = require("../../DataBase/FeedbackPSQL");
 
 module.exports = { 
-    getFeedbackByBook, 
+    getFeedbackByBook,
+    addFeedback,
 };

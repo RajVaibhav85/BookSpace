@@ -327,6 +327,12 @@
     margin-bottom: 10px;
 }
 
+.feedback-card .feedback-time {
+    font-size: 12px;
+    color: rgba(255,255,255,0.35);
+    margin-top: 6px;
+}
+
 .feedback-card .stars {
     color: #f5c518;
     font-size: 14px;
@@ -339,6 +345,108 @@
     line-height: 1.5;
     margin: 0 0 8px 0;
 }
+
+/* ── Feedback Modal ── */
+#feedback-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px);
+    z-index: 200;
+    justify-content: center;
+    align-items: center;
+}
+
+#feedback-overlay.open { display: flex; }
+
+#feedback-modal {
+    background: #0d0d1a;
+    border: var(--bg-border);
+    border-radius: 16px;
+    padding: 30px;
+    width: 90%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+#feedback-modal h3 {
+    margin: 0;
+    font-size: 18px;
+}
+
+#star-selector {
+    display: flex;
+    gap: 6px;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+}
+
+#star-selector input { display: none; }
+
+#star-selector label {
+    font-size: 30px;
+    color: rgba(255,255,255,0.2);
+    cursor: pointer;
+    transition: color 0.15s;
+}
+
+#star-selector input:checked ~ label,
+#star-selector label:hover,
+#star-selector label:hover ~ label {
+    color: #f5c518;
+}
+
+#feedback-comment-input {
+    background: rgba(255,255,255,0.05);
+    border: var(--bg-border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: white;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    resize: vertical;
+    min-height: 80px;
+    outline: none;
+    transition: background 0.2s;
+}
+
+#feedback-comment-input:focus { background: rgba(255,255,255,0.08); }
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+#modal-cancel {
+    padding: 10px 22px;
+    border-radius: 30px;
+    border: var(--bg-border);
+    cursor: pointer;
+    font-size: 14px;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+    color: white;
+    transition: 0.2s;
+}
+
+#modal-cancel:hover { background: rgba(255,255,255,0.1); }
+
+#modal-submit {
+    padding: 10px 22px;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    background: linear-gradient(45deg, #7b2ff7, #f107a3);
+    color: white;
+    transition: 0.3s;
+}
+
+#modal-submit:hover { opacity: 0.85; transform: scale(1.03); }
 
     </style>
 </head>
@@ -418,8 +526,29 @@
             <button id="nextChapter">Next</button>
         </div>
     </div>
+    <div id="submitFeedbackBtn" style="cursor: pointer;" class="read-btn">Submit Feedback</div>
+        <div id="feedback-overlay">
+        <div id="feedback-modal">
+            <h3>Rate & Review</h3>
+
+            <div id="star-selector">
+                <input type="radio" name="rating" id="star5" value="5"><label for="star5">★</label>
+                <input type="radio" name="rating" id="star4" value="4"><label for="star4">★</label>
+                <input type="radio" name="rating" id="star3" value="3"><label for="star3">★</label>
+                <input type="radio" name="rating" id="star2" value="2"><label for="star2">★</label>
+                <input type="radio" name="rating" id="star1" value="1"><label for="star1">★</label>
+            </div>
+
+            <textarea id="feedback-comment-input" placeholder="Write a comment (optional)..."></textarea>
+
+            <div class="modal-actions">
+                <button id="modal-cancel">Cancel</button>
+                <button id="modal-submit">Submit</button>
+            </div>
+        </div>
+    </div>
     <div id="feedback-section" style="display:none;">
-        <h2>Feedback</h2>
+        <h2>Feedbacks</h2>
         <div id="feedback-summary">
             <span id="avg-rating"></span>
             <span id="total-reviews"></span>
@@ -602,44 +731,6 @@ async function bookmarkChapter() {
     }
 }
 
-async function loadFeedback() {
-    console.log('Loading feedback for manga ID:', mangaId);
-    try {
-        const res  = await fetch(`/book/getFeedbackByBook/${mangaId}`);
-        const data = await res.json();
-
-        const section = document.getElementById('feedback-section');
-        const list    = document.getElementById('feedback-list');
-        const avgEl   = document.getElementById('avg-rating');
-        const totalEl = document.getElementById('total-reviews');
-
-        if (!data.length) return;
-
-        section.style.display = 'block';
-
-        const avg = (data.reduce((sum, f) => sum + f.rating, 0) / data.length).toFixed(1);
-        avgEl.textContent  = `★ ${avg}`;
-        totalEl.textContent = `${data.length} review${data.length > 1 ? 's' : ''}`;
-
-        list.innerHTML = '';
-        data.forEach(f => {
-            const stars = '★'.repeat(f.rating) + '☆'.repeat(5 - f.rating);
-
-            const card = document.createElement('div');
-            card.className = 'feedback-card';
-            card.innerHTML = `
-                <span class="username">${f.username}</span>
-                <span class="stars">${stars}</span>
-                ${f.comment ? `<p class="comment">${f.comment}</p>` : ''}
-            `;
-            list.appendChild(card);
-        });
-
-    } catch (err) {
-        console.error('Failed to load feedback:', err);
-    }
-}
-
 async function addToHistory(){
     try {
         const res = await fetch('/user/addToHistory', {
@@ -654,6 +745,116 @@ async function addToHistory(){
         alert('Unable to add to history: ' + err.message);
     }
 }
+
+// ── Feedback modal ────────────────────────────────────────────────────────
+const feedbackOverlay    = document.getElementById('feedback-overlay');
+const feedbackCommentInput = document.getElementById('feedback-comment-input');
+
+function openFeedbackModal() {
+    feedbackOverlay.classList.add('open');
+}
+
+function closeFeedbackModal() {
+    feedbackOverlay.classList.remove('open');
+    feedbackCommentInput.value = '';
+    document.querySelectorAll('#star-selector input').forEach(r => r.checked = false);
+}
+
+async function submitFeedback() {
+    const rating  = document.querySelector('#star-selector input:checked')?.value;
+    const comment = feedbackCommentInput.value.trim();
+
+    if (!rating) {
+        alert('Please select a star rating.');
+        return;
+    }
+
+    const submitBtn = document.getElementById('modal-submit');
+    submitBtn.textContent = 'Submitting...';
+    submitBtn.disabled    = true;
+
+    try {
+        const res = await fetch('/book/addFeedback', {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body:    JSON.stringify({ mangaId, rating: parseInt(rating), comment })
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Server error');
+
+        closeFeedbackModal();
+        loadFeedback();
+
+    } catch (err) {
+        alert('Failed to submit: ' + err.message);
+    } finally {
+        submitBtn.textContent = 'Submit';
+        submitBtn.disabled    = false;
+    }
+}
+
+async function loadFeedback() {
+    try {
+        const res  = await fetch(`/book/getFeedbackByBook/${mangaId}`);
+        const data = await res.json();
+
+        const section = document.getElementById('feedback-section');
+        const list    = document.getElementById('feedback-list');
+        const avgEl   = document.getElementById('avg-rating');
+        const totalEl = document.getElementById('total-reviews');
+
+        list.innerHTML = '';
+
+        if (!Array.isArray(data) || !data.length) {
+            section.style.display = 'none';
+            return;
+        }
+
+        section.style.display = 'block';
+
+        const avg = (data.reduce((sum, f) => sum + f.rating, 0) / data.length).toFixed(1);
+        avgEl.textContent   = `★ ${avg}`;
+        totalEl.textContent = `${data.length} review${data.length > 1 ? 's' : ''}`;
+
+        data.forEach(f => {
+            const stars = '★'.repeat(f.rating) + '☆'.repeat(5 - f.rating);
+            const time  = f.time
+                ? new Date(f.time).toLocaleString('en-IN', {
+                    day:    '2-digit',
+                    month:  'short',
+                    year:   'numeric',
+                    hour:   '2-digit',
+                    minute: '2-digit',
+                    hour12: true
+                })
+                : '';
+
+            const card = document.createElement('div');
+            card.className = 'feedback-card';
+            card.innerHTML = `
+                <span class="username">${f.username}</span>
+                <span class="stars">${stars}</span>
+                ${f.comment ? `<p class="comment">${f.comment}</p>` : ''}
+                ${time ? `<span class="feedback-time">${time}</span>` : ''}
+            `;
+            list.appendChild(card);
+        });
+
+    } catch (err) {
+        console.error('Failed to load feedback:', err);
+    }
+}
+
+
+document.getElementById('submitFeedbackBtn').addEventListener('click', openFeedbackModal);
+document.getElementById('modal-cancel').addEventListener('click', closeFeedbackModal);
+document.getElementById('modal-submit').addEventListener('click', submitFeedback);
+
+// close on backdrop click
+feedbackOverlay.addEventListener('click', (e) => {
+    if (e.target === feedbackOverlay) closeFeedbackModal();
+});
 
 document.getElementById('bookmarkBtn').addEventListener('click', bookmarkChapter);
 
