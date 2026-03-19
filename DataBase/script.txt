@@ -36,3 +36,12 @@ CREATE TABLE library (
 
 ALTER TABLE feedback
 ADD CONSTRAINT unique_feedback UNIQUE(user_id, bookid);
+
+
+19/03/26
+
+ALTER TABLE library
+ADD CONSTRAINT unique_library_entry UNIQUE (book_id, user_id);
+
+ALTER TABLE history
+ADD CONSTRAINT unique_history_entry UNIQUE (book_id, user_id);

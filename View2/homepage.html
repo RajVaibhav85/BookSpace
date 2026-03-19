@@ -92,10 +92,22 @@
             padding: 16px;
             justify-content: center;        /* ← fixed: centers cards on all screens */
         }
-        .card { width: 150px; text-align: center; border-radius: 8px; transition: transform 0.2s, box-shadow 0.2s; }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(255,255,255,0.2); }
-        .card img { width: 100%; border-radius: 8px; }
-        .card p { font-size: 12px; margin-top: 6px; }
+
+        .card {
+            width: 150px;
+            text-align: center;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.1);
+            border: var(--bg-border);
+            backdrop-filter: blur(10px);
+            padding: 8px;
+            box-sizing: border-box;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+        .card:hover { transform: translateY(-5px); background: rgba(255, 255, 255, 0.07); }
+        .card img { width: 100%; border-radius: 6px; display: block; }
+        .card p { font-size: 12px; margin: 8px 0 2px 0; color: rgba(255,255,255,0.85); }
 
         #about { width: 90%; max-width: 800px; box-sizing: border-box; margin: 40px auto; padding: 20px; display: flex; flex-direction: column; align-items: center; background: var(--bg-card); border: var(--bg-border); border-radius: 12px; }
         #about p { font-size: 18px; color: rgba(255,255,255,0.8); text-align: center; }
@@ -125,7 +137,7 @@
 
         @media(max-width: 400px){
             /* single column on very small screens */
-            .card { width: 100%; max-width: 180px; }
+            .card { width: calc(50% - 24px); box-sizing: border-box; }
         }
     </style>
 </head>

@@ -45,6 +45,8 @@ const registerRoutes = require('../Control/Routes/userRoutes');
 app.use("/user", registerRoutes);
 const apiRoutes = require('../Control/Routes/apiRoutes');
 app.use("/api",apiRoutes);
+const bookRoutes = require('../Control/Routes/bookRoutes');
+app.use("/book", bookRoutes);
 
 
 // 404 handler - redirect to the error page with a 404 code so the

@@ -291,6 +291,55 @@
     transform: scale(1.1);
 }
 
+#feedback-section {
+    margin-top: 40px;
+    background: var(--bg-card);
+    border: var(--bg-border);
+    border-radius: 16px;
+    padding: 25px;
+    margin-bottom: 40px;
+}
+
+#feedback-section h2 {
+    margin-top: 0;
+}
+
+#feedback-summary {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+}
+
+#avg-rating {
+    font-size: 28px;
+    font-weight: 600;
+    color: white;
+}
+
+.feedback-card {
+    background: rgba(255,255,255,0.05);
+    border: var(--bg-border);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 10px;
+}
+
+.feedback-card .stars {
+    color: #f5c518;
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+
+.feedback-card .comment {
+    font-size: 14px;
+    color: rgba(255,255,255,0.8);
+    line-height: 1.5;
+    margin: 0 0 8px 0;
+}
+
     </style>
 </head>
 <body>
@@ -369,8 +418,14 @@
             <button id="nextChapter">Next</button>
         </div>
     </div>
-
-
+    <div id="feedback-section" style="display:none;">
+        <h2>Feedback</h2>
+        <div id="feedback-summary">
+            <span id="avg-rating"></span>
+            <span id="total-reviews"></span>
+        </div>
+        <div id="feedback-list"></div>
+    </div>
   </div>
 
 </div>
@@ -526,7 +581,7 @@ async function bookmarkChapter() {
     btn.style.opacity = '0.5';
 
     try {
-        const res = await fetch('/user/setBookmark', {
+        const res = await fetch('/user/addToLibrary', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ mangaId, chapter: currentChapter })
@@ -535,19 +590,68 @@ async function bookmarkChapter() {
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Server error');
 
-        // Show bookmarked icon briefly
-        btn.querySelector('img').src = 'bookmarked-icon.png';
-        setTimeout(() => {
-            btn.querySelector('img').src = 'bookmark-icon.png';
-            btn.disabled = false;
-            btn.style.opacity = '1';
-        }, 2000);
+        btn.querySelector('img').src = 'bookmark-icon.png';
+        btn.disabled = false;
+        btn.style.opacity = '1';
 
     } catch (err) {
         alert('Bookmark failed: ' + err.message);
         btn.querySelector('img').src = 'bookmark-icon.png';
         btn.disabled = false;
         btn.style.opacity = '1';
+    }
+}
+
+async function loadFeedback() {
+    console.log('Loading feedback for manga ID:', mangaId);
+    try {
+        const res  = await fetch(`/book/getFeedbackByBook/${mangaId}`);
+        const data = await res.json();
+
+        const section = document.getElementById('feedback-section');
+        const list    = document.getElementById('feedback-list');
+        const avgEl   = document.getElementById('avg-rating');
+        const totalEl = document.getElementById('total-reviews');
+
+        if (!data.length) return;
+
+        section.style.display = 'block';
+
+        const avg = (data.reduce((sum, f) => sum + f.rating, 0) / data.length).toFixed(1);
+        avgEl.textContent  = `★ ${avg}`;
+        totalEl.textContent = `${data.length} review${data.length > 1 ? 's' : ''}`;
+
+        list.innerHTML = '';
+        data.forEach(f => {
+            const stars = '★'.repeat(f.rating) + '☆'.repeat(5 - f.rating);
+
+            const card = document.createElement('div');
+            card.className = 'feedback-card';
+            card.innerHTML = `
+                <span class="username">${f.username}</span>
+                <span class="stars">${stars}</span>
+                ${f.comment ? `<p class="comment">${f.comment}</p>` : ''}
+            `;
+            list.appendChild(card);
+        });
+
+    } catch (err) {
+        console.error('Failed to load feedback:', err);
+    }
+}
+
+async function addToHistory(){
+    try {
+        const res = await fetch('/user/addToHistory', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ mangaId })
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Server error');
+    } catch (err) {
+        alert('Unable to add to history: ' + err.message);
     }
 }
 
@@ -572,7 +676,13 @@ content.addEventListener("scroll", () => {
     readerBtns.style.display = isVisible ? "flex" : "none";
 });
 
-loadMangaDetails();
+function init(){
+    loadMangaDetails();
+    addToHistory();
+    loadFeedback();
+}
+
+init();
 
 </script>
 

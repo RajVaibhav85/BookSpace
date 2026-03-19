@@ -20,11 +20,19 @@ async function feedbacksbyUser(userid) {
     return result.rows;
 }
 
-async function feedbacksByBook(bookid) {
-    const sql = 'SELECT * FROM feedback WHERE bookid = $1';
-    const result = await pool.query(sql, [bookid]);
-    return result.rows;
-}
+const getFeedbackByBook = async (req, res) => {
+    try {
+        const result = await pool.query(
+            `SELECT rating, comment, date FROM feedback
+             WHERE bookid = $1
+             ORDER BY time DESC`,
+            [req.params.bookid]
+        );
+        res.json(result.rows);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
 
 async function getFeedbackByUserAndBook(userid, bookid) {
     const sql = 'SELECT * FROM feedback WHERE user_id = $1 AND bookid = $2';
@@ -36,6 +44,6 @@ module.exports = {
     addFeedback, 
     deleteFeedback, 
     feedbacksbyUser, 
-    feedbacksByBook, 
+    getFeedbackByBook, 
     getFeedbackByUserAndBook 
 };
