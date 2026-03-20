@@ -226,21 +226,15 @@
             border-color: rgba(255,80,80,0.7);
         }
 
-        /* ── LIKED GRID ── */
-        .liked-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 14px; }
-        .liked-card {
-            border-radius: 10px; overflow: hidden;
-            background: rgba(255,255,255,0.03); border: var(--bg-border);
-            cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .liked-card:hover { transform: translateY(-5px); box-shadow: 0 12px 30px rgba(181,123,238,0.2); }
-        .liked-cover {
-            width: 100%; aspect-ratio: 2/3;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 14px; font-weight: 700; letter-spacing: 0.5px;
-            color: rgba(255,255,255,0.85);
-        }
-        .liked-title { font-size: 11px; padding: 6px 8px; line-height: 1.4; }
+        /* ── HISTORY GRID ── */
+
+.history-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:18px;}
+.history-card{display:flex;flex-direction:column;border-radius:10px;overflow:hidden;background:rgba(255,255,255,0.03);border:var(--bg-border);cursor:pointer;transition:transform .2s, box-shadow .2s;}
+.history-card:hover{transform:translateY(-6px);box-shadow:0 10px 30px rgba(181,123,238,.25);}
+.history-cover{width:100%;aspect-ratio:2/3;overflow:hidden;}
+.history-cover img{width:100%;height:100%;object-fit:cover;}
+.history-title{font-size:13px;font-weight:600;padding:8px 10px 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.history-date{font-size:11px;padding:0 10px 10px;color:var(--text-muted);}
 
         /* ── FORMS ── */
         .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
@@ -377,7 +371,7 @@
         <div class="glass-card">
             <div class="stats-strip">
                 <div><div class="stat-val" id="stat-reading">—</div><div class="stat-lbl">Reading</div></div>
-                <div><div class="stat-val" id="stat-liked">—</div><div class="stat-lbl">Liked</div></div>
+                <div><div class="stat-val" id="stat-history">—</div><div class="stat-lbl">History</div></div>
                 <div><div class="stat-val" id="stat-finished">—</div><div class="stat-lbl">Finished</div></div>
             </div>
         </div>
@@ -386,7 +380,7 @@
             <div class="btn-group">
                 <button class="btn btn-primary" onclick="showTab('edit')">Edit Profile</button>
                 <button class="btn btn-ghost"   onclick="showTab('password')">Change Password</button>
-                <button class="btn btn-danger">Delete Account</button>
+                <button class="btn btn-danger" onclick="deleteAccount()">Delete Account</button>
             </div>
         </div>
 
@@ -398,7 +392,7 @@
         <div class="glass-card" style="padding:16px 20px;">
             <div class="tab-row">
                 <button class="tab-btn active" onclick="switchTab('library',this)">Library</button>
-                <button class="tab-btn" onclick="switchTab('liked',this)">Liked</button>
+                <button class="tab-btn" onclick="switchTab('history',this)">History</button>
                 <button class="tab-btn" onclick="switchTab('edit',this)">Edit Profile</button>
                 <button class="tab-btn" onclick="switchTab('password',this)">Password</button>
             </div>
@@ -414,10 +408,10 @@
             </div>
         </div>
 
-        <!-- LIKED -->
-        <div class="glass-card tab-panel" id="tab-liked">
-            <p class="section-title">Liked Books</p>
-            <div class="liked-grid" id="liked-grid"></div>
+        <!-- history -->
+        <div class="glass-card tab-panel" id="tab-history">
+            <p class="section-title">history Books</p>
+            <div class="history-grid" id="history-grid"></div>
         </div>
 
         <!-- EDIT PROFILE -->
@@ -537,20 +531,6 @@
         return (t || '?').split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
     }
 
-    // ── LIKED (static placeholder) ────────────────────────────────
-    const liked = [
-        'Solo Leveling','One Piece','Berserk','Death Note','Horimiya',
-        'Re:Zero','Fairy Tail','Monster','Vinland Saga','Haikyuu!!'
-    ];
-    const lg = document.getElementById('liked-grid');
-    liked.forEach((title, i) => {
-        lg.innerHTML += `
-        <div class="liked-card">
-            <div class="liked-cover" style="${coverStyle(i + 3)}">${initials(title)}</div>
-            <div class="liked-title">${title}</div>
-        </div>`;
-    });
-
     // ── TOAST ─────────────────────────────────────────────────────
     function showToast(message, isError = false) {
         const existing = document.getElementById('toast');
@@ -615,7 +595,7 @@
             setOrNull('profile-bio',      u.bio);
 
             document.getElementById('stat-reading' ).textContent = u.reading  ?? '—';
-            document.getElementById('stat-liked'   ).textContent = u.liked    ?? '—';
+            document.getElementById('stat-history'   ).textContent = u.history    ?? '—';
             document.getElementById('stat-finished').textContent = u.finished ?? '—';
 
             setOrNull('edit-displayname', u.displayname, true);
@@ -807,12 +787,91 @@
         }
     }
 
+    // ── LOAD HISTORY ──────────────────────────────────────────────
+   async function loadHistory() {
+    const container = document.getElementById('history-grid');
+
+    try {
+        const res = await fetch('/user/getHistoryByUser');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const books = await res.json();
+        if (!Array.isArray(books) || books.length === 0) {
+            container.innerHTML = `
+                <div style="text-align:center;padding:60px 20px;color:var(--text-muted);font-size:14px;">
+                    No reading history yet.
+                </div>`;
+            return;
+        }
+        const details = await Promise.all(
+            books.map(b => fetchMangaDetails(b.book_id))
+        );
+        container.innerHTML = '';
+        books.forEach((book, i) => {
+            const { title, cover } = details[i];
+            const coverHTML = cover
+                ? `<img src="${cover}" alt="${title}">`
+                : `<div style="${coverStyle(i)};width:100%;height:100%;
+                display:flex;align-items:center;justify-content:center;">
+                ${initials(title)}</div>`;
+            const card = document.createElement('div');
+            card.className = 'history-card';
+            card.innerHTML = `
+                <div class="history-cover">
+                    ${coverHTML}
+                </div>
+                <div class="history-title">${title}</div>
+                <div class="history-date">
+                    ${new Date(book.viewed_at).toLocaleDateString()}
+                </div>
+            `;
+            card.addEventListener('click', () => {
+                window.location.href = `/reader?id=${book.book_id}`;
+            });
+            container.appendChild(card);
+        });
+
+    } catch (err) {
+        console.error('loadHistory error:', err);
+        container.innerHTML = `
+            <div style="text-align:center;padding:40px;color:rgba(255,120,120,0.85);">
+                Failed to load history.
+            </div>`;
+    }
+}
+
+    // ── DELETE ACCOUNT ──────────────────────────────────────────────
+    async function deleteAccount(){
+        const confirmDelete = confirm('Are you sure you want to delete your account? This action cannot be undone.');
+        if (!confirmDelete) return;
+        try{
+            const res = await fetch('/user/deleteAccount', {method:'POST'});
+            const data = await res.json();
+            if (!res.ok) {
+                showToast(data.error || "Failed to delete account.", true);
+                return;
+            }
+            showToast("Account deleted.");
+            setTimeout(() => {
+                window.location.href = "/";
+            }, 1200);
+
+        } catch (err) {
+            console.error("deleteAccount error:", err);
+            showToast("Something went wrong.", true);
+        }
+    }
+
     // ── BIND BUTTONS ──────────────────────────────────────────────
     document.getElementById('save-profile-btn' ).addEventListener('click', setProfile);
     document.getElementById('save-password-btn').addEventListener('click', setPassword);
 
     // ── INIT ──────────────────────────────────────────────────────
-    loadProfile();
-    loadLibrary();
+    function init() {
+        loadProfile();
+        loadLibrary();
+        loadHistory();
+    }
+
+    init();
 </script>
 </body>

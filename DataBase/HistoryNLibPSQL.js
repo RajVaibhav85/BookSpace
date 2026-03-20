@@ -2,18 +2,34 @@ const { get } = require('../Control/Routes/pageRoutes');
 const pool = require('../Control/server');
 
 // HISTORY
-async function getHistoryByUser(userid) {
-    const sql = 'SELECT * FROM history WHERE user_id = $1 ORDER BY viewed_at DESC';
-    const result = await pool.query(sql, [userid]);
-    return result.rows;
+
+// async function getHistoryByUser(userid) {
+//     const sql = 'SELECT * FROM history WHERE user_id = $1 ORDER BY viewed_at DESC';
+//     const result = await pool.query(sql, [userid]);
+//     return result.rows;
+// }
+
+const getHistoryByUser = async (req,res) => {
+    const user_id = req.session.userId;
+    if (!user_id) {
+        return res.status(401).json({ error: 'Not logged in' });
+    }
+    try{
+        const sql = 
+            `SELECT book_id, viewed_at
+             FROM history
+             WHERE user_id = $1
+             ORDER BY viewed_at DESC`;
+        const result = await pool.query(sql, [user_id]);
+        res.json(result.rows);
+    }
+    catch(err){
+        console.error('getHistoryByUser error:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
 }
 
 const addToHistory = async (req , res) => {
-    // const sql = 'INSERT INTO history (user_id, book_id) VALUES ($1, $2) RETURNING *';
-    // const result = await pool.query(sql, [userid, bookid]);
-    // return result.rows[0];
-
-
     const userId = req.session.userId;
     if (!userId) return res.status(401).json({ error: 'Not logged in' });
 
