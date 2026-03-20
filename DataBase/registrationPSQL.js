@@ -133,7 +133,7 @@ const updatePassword = async (req, res) => {
         if (check.rows.length === 0) {
             return res.status(404).json({ error: 'User not found.' });
         }
-        if (check.rows[0].password !== current_password) {
+        if (bcrypt.compare(current_password, check.rows[0].password) === false) {
             return res.status(401).json({ error: 'Current password is incorrect.' });
         }
         const hashed = await bcrypt.hash(new_password, 10);
