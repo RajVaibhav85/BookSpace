@@ -37,16 +37,17 @@ const { PDFDocument } = require('pdf-lib');
 const formatManga = (manga) => {
     const coverRel = manga.relationships.find(r => r.type === 'cover_art');
     const fileName = coverRel?.attributes?.fileName;
-    const title = manga.attributes.title.en || Object.values(manga.attributes.title)[0];
+    const title    = manga.attributes.title.en || Object.values(manga.attributes.title)[0];
 
     return {
-        id: manga.id,
+        id          : manga.id,
         title,
-        status: manga.attributes.status,
-        year: manga.attributes.year,
-        description: manga.attributes.description?.en || '',
-        tags: manga.attributes.tags.map(t => t.attributes.name.en),
-        cover: fileName
+        status      : manga.attributes.status,
+        year        : manga.attributes.year,
+        lastChapter : manga.attributes.lastChapter || null,  // ← ADD THIS
+        description : manga.attributes.description?.en || '',
+        tags        : manga.attributes.tags.map(t => t.attributes.name.en),
+        cover       : fileName
             ? `https://uploads.mangadex.org/covers/${manga.id}/${fileName}.512.jpg`
             : null,
     };

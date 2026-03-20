@@ -110,7 +110,6 @@ const updatePassword = async (req, res) => {
     }
 
     try {
-        // Verify current password
         const check = await pool.query(
             'SELECT password FROM registration WHERE user_id = $1',
             [req.session.userId]

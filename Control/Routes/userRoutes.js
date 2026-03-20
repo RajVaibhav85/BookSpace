@@ -9,6 +9,8 @@ router.post('/login',           userController.loginUser);
 router.post('/addToLibrary',    userController.addToLibrary);
 router.post('/addToHistory',    userController.addToHistory);
 router.get('/getUserDetails',   userController.getUserDetails);
+router.get('/getLibraryByUser', userController.getLibraryByUser);
+router.post('/removeFromLibrary', userController.removeFromLibrary)
 router.post('/updateUserDetails', userController.updateUserDetails);
 router.post('/updatePassword',  userController.updatePassword);
 

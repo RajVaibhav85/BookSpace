@@ -23,20 +23,22 @@
             background: var(--bg-gradient);
             background-attachment: fixed;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
+        /* ── TOP BAR ── */
         #top-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px;
+            padding: 20px 5%;
             z-index: 100;
             background: transparent;
         }
         #top-bar p { margin: 0; font-size: 28px; }
         #top-bar a { text-decoration: none; color: white; }
 
-        nav { background: transparent; padding: 15px 30px; }
+        nav { background: transparent; padding: 15px 0; }
         nav ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 20px; flex-wrap: wrap; }
         nav a { text-decoration: none; color: white; font-weight: 500; font-size: 20px; transition: 0.3s; }
         nav a:hover { opacity: 0.7; }
@@ -52,20 +54,24 @@
             display: none;
             grid-template-columns: repeat(4, 1fr);
             gap: 2px 8px; min-width: 520px;
+            z-index: 2000;
         }
         .dropdown-menu li { padding: 6px 10px; white-space: nowrap; }
         .dropdown-menu a { font-size: 14px; display: block; }
         .dropdown:hover .dropdown-menu { display: grid; }
 
+        /* ── PAGE LAYOUT ── */
         #page {
-            max-width: 1100px;
+            width: 90%;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 24px 20px 60px;
+            padding: 24px 0 60px;
             display: grid;
             grid-template-columns: 300px 1fr;
             gap: 20px;
         }
 
+        /* ── GLASS CARD ── */
         .glass-card {
             background: var(--glass);
             border: var(--bg-border);
@@ -77,12 +83,14 @@
         }
         .glass-card:hover { background: var(--glass-hover); }
 
+        /* ── SIDEBAR ── */
         #sidebar {
             grid-column: 1;
             grid-row: 1 / 3;
             display: flex;
             flex-direction: column;
             gap: 16px;
+            min-width: 0;
         }
 
         .avatar-wrap {
@@ -112,11 +120,6 @@
 
         .user-name { text-align: center; font-size: 20px; font-weight: 700; letter-spacing: 0.5px; margin: 0 0 4px; }
         .user-handle { text-align: center; font-size: 13px; color: var(--text-muted); margin: 0 0 16px; }
-        .badge {
-            display: inline-block; padding: 2px 8px; border-radius: 99px;
-            font-size: 11px; font-weight: 700;
-            background: rgba(181,123,238,0.25); color: var(--accent);
-        }
 
         .info-row {
             display: flex; align-items: flex-start; gap: 10px;
@@ -145,7 +148,8 @@
         .btn-danger { background: transparent; border: 1px solid rgba(255,80,80,0.4); color: rgba(255,120,120,0.9); }
         .btn-danger:hover { background: rgba(255,50,50,0.1); }
 
-        #main { grid-column: 2; display: flex; flex-direction: column; gap: 20px; }
+        /* ── MAIN ── */
+        #main { grid-column: 2; display: flex; flex-direction: column; gap: 20px; min-width: 0; }
 
         .section-title {
             font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
@@ -154,6 +158,7 @@
         }
         .section-title::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.1); }
 
+        /* Tabs */
         .tab-row { display: flex; gap: 8px; flex-wrap: wrap; }
         .tab-btn {
             padding: 7px 18px; border-radius: 30px; border: var(--bg-border);
@@ -166,27 +171,62 @@
         .tab-panel { display: none; }
         .tab-panel.active { display: block; }
 
-        .recent-list { display: flex; flex-direction: column; gap: 12px; }
+        /* ── LIBRARY LIST ── */
+        .recent-list { display: flex; flex-direction: column; gap: 14px; }
+
         .recent-item {
-            display: flex; gap: 14px; align-items: center;
-            padding: 10px 12px; border-radius: 10px;
+            display: flex; gap: 16px; align-items: center;
+            padding: 14px 16px; border-radius: 12px;
             background: rgba(255,255,255,0.025); border: var(--bg-border);
-            transition: background 0.2s, transform 0.2s; cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+            cursor: pointer;
+            min-height: 100px;
+            min-width: 0;
         }
         .recent-item:hover { background: rgba(255,255,255,0.07); transform: translateX(4px); }
-        .recent-cover {
-            width: 44px; height: 62px; border-radius: 5px; flex-shrink: 0;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 12px; font-weight: 700; letter-spacing: 0.5px;
-            color: rgba(255,255,255,0.85);
-        }
-        .recent-info { flex: 1; min-width: 0; }
-        .recent-title { font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .recent-meta { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
-        .recent-progress { width: 100%; height: 3px; border-radius: 99px; background: rgba(255,255,255,0.1); margin-top: 8px; overflow: hidden; }
-        .recent-progress-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
-        .recent-chapter { font-size: 12px; color: var(--text-muted); flex-shrink: 0; }
 
+        .recent-cover {
+            width: 60px; height: 85px; border-radius: 6px; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px; font-weight: 700; letter-spacing: 0.5px;
+            color: rgba(255,255,255,0.85);
+            overflow: hidden;
+        }
+        .recent-cover img {
+            width: 100%; height: 100%;
+            object-fit: cover; border-radius: 6px; display: block;
+        }
+
+        .recent-info { flex: 1; min-width: 0; }
+        .recent-title { font-size: 15px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .recent-meta  { font-size: 13px; color: var(--text-muted); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .recent-chapter {
+            font-size: 12px; color: var(--text-muted); flex-shrink: 0;
+            white-space: nowrap;
+        }
+
+        /* ── REMOVE BUTTON ── */
+        .remove-btn {
+            flex-shrink: 0;
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,80,80,0.35);
+            background: transparent;
+            color: rgba(255,100,100,0.75);
+            font-size: 14px; line-height: 1;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.2s, color 0.2s, border-color 0.2s;
+            font-family: Arial, sans-serif;
+        }
+        .remove-btn:hover {
+            background: rgba(255,50,50,0.15);
+            color: rgba(255,130,130,1);
+            border-color: rgba(255,80,80,0.7);
+        }
+
+        /* ── LIKED GRID ── */
         .liked-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 14px; }
         .liked-card {
             border-radius: 10px; overflow: hidden;
@@ -202,6 +242,7 @@
         }
         .liked-title { font-size: 11px; padding: 6px 8px; line-height: 1.4; }
 
+        /* ── FORMS ── */
         .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
         .form-group label { font-size: 11px; color: var(--text-muted); letter-spacing: 0.5px; text-transform: uppercase; }
         .form-group input, .form-group textarea {
@@ -219,6 +260,7 @@
 
         #strength-bar { height: 100%; border-radius: 99px; width: 0%; transition: width 0.4s, background 0.4s; }
 
+        /* ── ANIMATIONS ── */
         @keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
         .glass-card { animation: fadeUp 0.45s ease both; }
         #sidebar .glass-card:nth-child(1) { animation-delay: 0.05s; }
@@ -228,16 +270,34 @@
         #main > *:nth-child(2) { animation-delay: 0.30s; }
         #main > *:nth-child(3) { animation-delay: 0.38s; }
 
-        @media(max-width: 768px) {
-            #page { grid-template-columns: 1fr; }
-            #sidebar { grid-column: 1; grid-row: auto; }
-            #main { grid-column: 1; }
-            .form-row { flex-direction: column; }
-            #top-bar { flex-direction: column; gap: 10px; align-items: center; }
-            nav ul { flex-wrap: wrap; justify-content: center; }
-            #top-bar p { font-size: 20px; }
+        /* ── RESPONSIVE ── */
+        @media (max-width: 900px) {
+            #page { grid-template-columns: 240px 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            #top-bar { flex-direction: column; gap: 10px; align-items: center; padding: 16px 5%; }
+            #top-bar p { font-size: 22px; }
             nav a { font-size: 16px; }
+            nav ul { justify-content: center; }
             .dropdown-menu { grid-template-columns: repeat(2, 1fr); min-width: 260px; }
+            #page { grid-template-columns: 1fr; width: 92%; }
+            #sidebar { grid-column: 1; grid-row: auto; }
+            #main   { grid-column: 1; }
+            .form-row { flex-direction: column; }
+        }
+
+        @media (max-width: 480px) {
+            #top-bar { padding: 14px 4%; }
+            #top-bar p { font-size: 20px; }
+            nav a { font-size: 14px; }
+            nav ul { gap: 10px; }
+            #page { width: 94%; padding: 16px 0 40px; }
+            .glass-card { padding: 18px; }
+            .recent-cover { width: 50px; height: 70px; }
+            .recent-title { font-size: 14px; }
+            .recent-meta  { font-size: 12px; }
+            .dropdown-menu { min-width: 220px; grid-template-columns: repeat(2,1fr); left: -40px; transform: none; }
         }
     </style>
 </head>
@@ -287,6 +347,7 @@
 
 <div id="page">
 
+    <!-- ── SIDEBAR ── -->
     <aside id="sidebar">
 
         <div class="glass-card" style="text-align:center;">
@@ -294,7 +355,7 @@
                 <div class="avatar-ring"></div>
                 <div class="avatar" id="profile-avatar">?</div>
             </div>
-            <p class="user-name"  id="profile-displayname"></p>
+            <p class="user-name"   id="profile-displayname"></p>
             <p class="user-handle" id="profile-handle"></p>
             <div style="text-align:left;">
                 <div class="info-row">
@@ -331,22 +392,29 @@
 
     </aside>
 
+    <!-- ── MAIN ── -->
     <main id="main">
 
         <div class="glass-card" style="padding:16px 20px;">
             <div class="tab-row">
-                <button class="tab-btn active" onclick="switchTab('recents',this)">Recents</button>
+                <button class="tab-btn active" onclick="switchTab('library',this)">Library</button>
                 <button class="tab-btn" onclick="switchTab('liked',this)">Liked</button>
                 <button class="tab-btn" onclick="switchTab('edit',this)">Edit Profile</button>
                 <button class="tab-btn" onclick="switchTab('password',this)">Password</button>
             </div>
         </div>
 
-        <div class="glass-card tab-panel active" id="tab-recents">
-            <p class="section-title">Continue Reading</p>
-            <div class="recent-list" id="recent-list"></div>
+        <!-- LIBRARY -->
+        <div class="glass-card tab-panel active" id="tab-library">
+            <p class="section-title">My Library</p>
+            <div class="recent-list" id="library-list">
+                <div style="text-align:center;padding:40px;color:var(--text-muted);font-size:14px;">
+                    Loading library...
+                </div>
+            </div>
         </div>
 
+        <!-- LIKED -->
         <div class="glass-card tab-panel" id="tab-liked">
             <p class="section-title">Liked Books</p>
             <div class="liked-grid" id="liked-grid"></div>
@@ -358,11 +426,11 @@
             <div class="form-row">
                 <div class="form-group">
                     <label>Display Name</label>
-                    <input type="text"  id="edit-displayname" placeholder="Display name">
+                    <input type="text" id="edit-displayname" placeholder="Display name">
                 </div>
                 <div class="form-group">
                     <label>Username</label>
-                    <input type="text"  id="edit-username" placeholder="Username" readonly
+                    <input type="text" id="edit-username" placeholder="Username" readonly
                            style="opacity:0.5;cursor:not-allowed;">
                 </div>
             </div>
@@ -372,7 +440,7 @@
             </div>
             <div class="form-group">
                 <label>Location</label>
-                <input type="text"  id="edit-location" placeholder="Location">
+                <input type="text" id="edit-location" placeholder="Location">
             </div>
             <div class="form-group">
                 <label>Bio</label>
@@ -380,8 +448,7 @@
             </div>
             <div style="display:flex;gap:10px;margin-top:6px;">
                 <button class="btn btn-primary" id="save-profile-btn" style="width:auto;padding:10px 28px;">Save Changes</button>
-                <button class="btn btn-ghost"   onclick="switchTab('recents', document.querySelector('.tab-btn'))"
-                        style="width:auto;padding:10px 28px;">Cancel</button>
+                <button class="btn btn-ghost" onclick="showTab('library')" style="width:auto;padding:10px 28px;">Cancel</button>
             </div>
         </div>
 
@@ -463,44 +530,23 @@
         ['#0a4a1a','#1a7a3a'], ['#4a1a0a','#8a3a1a'],
     ];
     function coverStyle(i) {
-        const [a,b] = palette[i % palette.length];
+        const [a, b] = palette[i % palette.length];
         return `background:linear-gradient(135deg,${a},${b})`;
     }
     function initials(t) {
-        return t.split(' ').slice(0,2).map(w => w[0]).join('').toUpperCase();
+        return (t || '?').split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
     }
 
-    // ── STATIC DEMO DATA (replace with real API calls later) ──────
-    const recents = [
-        { title:'Solo Leveling',  genre:'Action · Fantasy',         ch:'Ch. 182', prog:91 },
-        { title:'Horimiya',       genre:'Romance · Slice of Life',  ch:'Ch. 74',  prog:62 },
-        { title:'Mushoku Tensei', genre:'Isekai · Fantasy',         ch:'Vol. 11', prog:38 },
-        { title:'Monster',        genre:'Psychological · Thriller', ch:'Ch. 55',  prog:55 },
-        { title:'Haikyuu!!',      genre:'Sports · Drama',           ch:'Ch. 200', prog:78 },
-    ];
-    const rl = document.getElementById('recent-list');
-    recents.forEach((r,i) => {
-        rl.innerHTML += `
-        <div class="recent-item">
-            <div class="recent-cover" style="${coverStyle(i)}">${initials(r.title)}</div>
-            <div class="recent-info">
-                <div class="recent-title">${r.title}</div>
-                <div class="recent-meta">${r.genre}</div>
-                <div class="recent-progress"><div class="recent-progress-fill" style="width:${r.prog}%"></div></div>
-            </div>
-            <div class="recent-chapter">${r.ch}</div>
-        </div>`;
-    });
-
+    // ── LIKED (static placeholder) ────────────────────────────────
     const liked = [
         'Solo Leveling','One Piece','Berserk','Death Note','Horimiya',
         'Re:Zero','Fairy Tail','Monster','Vinland Saga','Haikyuu!!'
     ];
     const lg = document.getElementById('liked-grid');
-    liked.forEach((title,i) => {
+    liked.forEach((title, i) => {
         lg.innerHTML += `
         <div class="liked-card">
-            <div class="liked-cover" style="${coverStyle(i+3)}">${initials(title)}</div>
+            <div class="liked-cover" style="${coverStyle(i + 3)}">${initials(title)}</div>
             <div class="liked-title">${title}</div>
         </div>`;
     });
@@ -555,28 +601,23 @@
             }
             const u = await res.json();
 
-            // Avatar initials
             const displayName = u.displayname || u.username || '?';
             document.getElementById('profile-avatar').textContent =
-                displayName.split(' ').slice(0,2).map(w => w[0]).join('').toUpperCase();
+                displayName.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
 
-            // Sidebar
             setOrNull('profile-displayname', u.displayname || u.username);
             document.getElementById('profile-handle').innerHTML = u.username
-                ? `@${u.username}`
-                : nullPill;
+                ? `@${u.username}` : nullPill;
 
             setOrNull('profile-email',    u.email);
             setOrNull('profile-location', u.location);
             setOrNull('profile-joined',   u.joined_fmt);
             setOrNull('profile-bio',      u.bio);
 
-            // Stats
             document.getElementById('stat-reading' ).textContent = u.reading  ?? '—';
             document.getElementById('stat-liked'   ).textContent = u.liked    ?? '—';
             document.getElementById('stat-finished').textContent = u.finished ?? '—';
 
-            // Edit form pre-fill
             setOrNull('edit-displayname', u.displayname, true);
             setOrNull('edit-username',    u.username,    true);
             setOrNull('edit-email',       u.email,       true);
@@ -596,26 +637,18 @@
             location    : document.getElementById('edit-location').value.trim(),
             bio         : document.getElementById('edit-bio').value.trim()
         };
-
-        if (!payload.email) {
-            showToast('Email cannot be empty.', true);
-            return;
-        }
-
+        if (!payload.email) { showToast('Email cannot be empty.', true); return; }
         try {
-            const res = await fetch('/user/updateUserDetails', {
+            const res  = await fetch('/user/updateUserDetails', {
                 method : 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body   : JSON.stringify(payload)
             });
             const data = await res.json();
-            if (!res.ok) {
-                showToast(data.error || 'Update failed.', true);
-                return;
-            }
+            if (!res.ok) { showToast(data.error || 'Update failed.', true); return; }
             showToast('Profile updated!');
             await loadProfile();
-            switchTab('recents', document.querySelector('.tab-btn'));
+            showTab('library');
         } catch (err) {
             console.error('setProfile error:', err);
             showToast('Something went wrong.', true);
@@ -629,38 +662,148 @@
         const confirm_password = document.getElementById('pwd-confirm').value;
 
         if (!current_password || !new_password || !confirm_password) {
-            showToast('All fields are required.', true);
-            return;
+            showToast('All fields are required.', true); return;
         }
         if (new_password !== confirm_password) {
-            showToast('New passwords do not match.', true);
-            return;
+            showToast('New passwords do not match.', true); return;
         }
         if (new_password.length < 6) {
-            showToast('Password must be at least 6 characters.', true);
-            return;
+            showToast('Password must be at least 6 characters.', true); return;
         }
-
         try {
-            const res = await fetch('/user/updatePassword', {
+            const res  = await fetch('/user/updatePassword', {
                 method : 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body   : JSON.stringify({ current_password, new_password, confirm_password })
             });
             const data = await res.json();
-            if (!res.ok) {
-                showToast(data.error || 'Update failed.', true);
-                return;
-            }
+            if (!res.ok) { showToast(data.error || 'Update failed.', true); return; }
             showToast('Password updated successfully!');
             document.getElementById('pwd-current').value = '';
             document.getElementById('pwd-new').value     = '';
             document.getElementById('pwd-confirm').value = '';
             checkStrength('');
-            switchTab('recents', document.querySelector('.tab-btn'));
+            showTab('library');
         } catch (err) {
             console.error('setPassword error:', err);
             showToast('Something went wrong.', true);
+        }
+    }
+
+    // ── REMOVE FROM LIBRARY ───────────────────────────────────────
+    async function removeFromLibrary(bookId, cardEl) {
+        try {
+            const res = await fetch('/user/removeFromLibrary', {
+                method : 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body   : JSON.stringify({ book_id: bookId })
+            });
+            if (!res.ok) {
+                const data = await res.json();
+                showToast(data.error || 'Failed to remove.', true);
+                return;
+            }
+            cardEl.style.transition = 'opacity 0.3s, transform 0.3s';
+            cardEl.style.opacity    = '0';
+            cardEl.style.transform  = 'translateX(20px)';
+            setTimeout(() => {
+                cardEl.remove();
+                const list = document.getElementById('library-list');
+                if (!list.querySelector('.recent-item')) {
+                    list.innerHTML = `
+                        <div style="text-align:center;padding:60px 20px;color:var(--text-muted);font-size:14px;">
+                            Your library is empty. Start adding manga!
+                        </div>`;
+                }
+            }, 300);
+            showToast('Removed from library.');
+        } catch (err) {
+            console.error('removeFromLibrary error:', err);
+            showToast('Something went wrong.', true);
+        }
+    }
+
+    // ── FETCH MANGA DETAILS ───────────────────────────────────────
+    async function fetchMangaDetails(bookId) {
+        try {
+            const res  = await fetch(`/api/${bookId}`);
+            if (!res.ok) throw new Error('Not found');
+            const data = await res.json();
+            return {
+                title : data.title || 'Unknown Title',
+                genres: (data.tags || []).slice(0, 2).join(' · ') || 'Manga',
+                cover : data.cover || null
+            };
+        } catch {
+            return { title: 'Unknown', genres: 'Manga', cover: null };
+        }
+    }
+
+    // ── LOAD LIBRARY ──────────────────────────────────────────────
+    async function loadLibrary() {
+        const container = document.getElementById('library-list');
+        try {
+            const res = await fetch('/user/getLibraryByUser');
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const books = await res.json();
+
+            if (!Array.isArray(books) || books.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align:center;padding:60px 20px;color:var(--text-muted);font-size:14px;">
+                        <div style="font-size:36px;margin-bottom:10px;">📚</div>
+                        Your library is empty. Start adding manga!
+                    </div>`;
+                return;
+            }
+
+            const details = await Promise.all(books.map(b => fetchMangaDetails(b.book_id)));
+
+            container.innerHTML = '';
+            books.forEach((book, i) => {
+                const { title, genres, cover } = details[i];
+                const bookmark     = book.bookmark || 0;
+                const chapterLabel = `Ch. ${bookmark}`;
+                const esc          = initials(title).replace(/'/g, "\\'");
+
+                const coverHTML = cover
+                    ? `<div class="recent-cover">
+                        <img src="${cover}" alt="${title}"
+                             onerror="this.parentElement.setAttribute('style','${coverStyle(i)}');this.remove();this.parentElement.textContent='${esc}';">
+                       </div>`
+                    : `<div class="recent-cover" style="${coverStyle(i)}">${initials(title)}</div>`;
+
+                const card = document.createElement('div');
+                card.className = 'recent-item';
+                card.innerHTML = `
+                    ${coverHTML}
+                    <div class="recent-info">
+                        <div class="recent-title">${title}</div>
+                        <div class="recent-meta">${genres}</div>
+                    </div>
+                    <div class="recent-chapter">${chapterLabel}</div>
+                    <button class="remove-btn" title="Remove from library">✕</button>
+                `;
+
+                card.addEventListener('click', (e) => {
+                    if (e.target.closest('.remove-btn')) return;
+                    window.location.href = `/reader?id=${book.book_id}`;
+                });
+
+                card.querySelector('.remove-btn').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    removeFromLibrary(book.book_id, card);
+                });
+
+                container.appendChild(card);
+            });
+
+        } catch (err) {
+            console.error('loadLibrary error:', err);
+            container.innerHTML = `
+                <div style="text-align:center;padding:40px 20px;color:rgba(255,120,120,0.85);font-size:14px;">
+                    <div style="font-size:32px;margin-bottom:10px;">⚠️</div>
+                    Failed to load library. Please try again later.
+                </div>`;
         }
     }
 
@@ -670,5 +813,6 @@
 
     // ── INIT ──────────────────────────────────────────────────────
     loadProfile();
+    loadLibrary();
 </script>
 </body>

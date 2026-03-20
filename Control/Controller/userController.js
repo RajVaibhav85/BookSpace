@@ -3,7 +3,7 @@ const router  = express.Router();
 const pool    = require("../server");
 
 const { registerUser, loginUser, getUserDetails, updateUserDetails, updatePassword } = require("../../DataBase/registrationPSQL");
-const { addToLibrary, addToHistory } = require("../../DataBase/HistoryNLibPSQL");
+const { addToLibrary, addToHistory, getLibraryByUser, removeFromLibrary } = require("../../DataBase/HistoryNLibPSQL");
 
 const logout = (req, res) => {
     if (req.session) {
@@ -22,7 +22,9 @@ module.exports = {
     loginUser,
     getUserDetails,
     updateUserDetails,
+    removeFromLibrary,
     updatePassword,
     addToLibrary,
-    addToHistory
+    addToHistory,
+    getLibraryByUser
 };

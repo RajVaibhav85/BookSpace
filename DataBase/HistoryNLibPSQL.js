@@ -1,3 +1,4 @@
+const { get } = require('../Control/Routes/pageRoutes');
 const pool = require('../Control/server');
 
 // HISTORY
@@ -43,11 +44,25 @@ async function deleteFromHistory(userid, bookid) {
 }
 
 // LIBRARY
-async function getLibraryByUser(userid) {
-    const sql = 'SELECT * FROM library WHERE user_id = $1 ORDER BY joined_on DESC';
-    const result = await pool.query(sql, [userid]);
-    return result.rows;
-}
+const getLibraryByUser = async (req, res) => {
+    if (!req.session.userId) {
+        return res.status(401).json({ error: 'Not logged in' });
+    }
+    try {
+        const result = await pool.query(
+            `SELECT book_id, bookmark, joined_on
+             FROM library
+             WHERE user_id = $1
+             ORDER BY joined_on DESC`,
+            [req.session.userId]
+        );
+        res.json(result.rows);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server error' });
+    }
+};
+
 
 const addToLibrary = async (req, res) => {
     const userId = req.session.userId;
@@ -73,10 +88,32 @@ const addToLibrary = async (req, res) => {
     }
 };
 
-async function deleteFromLibrary(userid, bookid) {
-    const sql = 'DELETE FROM library WHERE user_id = $1 AND book_id = $2 RETURNING *';
-    const result = await pool.query(sql, [userid, bookid]);
-    return result.rows[0];
+const removeFromLibrary = async (req , res) => {
+    try {
+        const userid = req.session.userId;
+        const { book_id } = req.body;
+
+        if (!userid) {
+            return res.status(401).json({ error: "Not logged in" });
+        }
+
+        const sql = `
+            DELETE FROM library
+            WHERE user_id = $1 AND book_id = $2
+            RETURNING *
+        `;
+
+        const result = await pool.query(sql, [userid, book_id]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: "Book not found in library" });
+        }
+
+        res.json({ success: true });
+    } catch (err) {
+        console.error("removeFromLibrary error:", err);
+        res.status(500).json({ error: "Server error" });
+    }
 }
 
 module.exports = {
@@ -85,5 +122,6 @@ module.exports = {
     deleteFromHistory,
     getLibraryByUser,
     addToLibrary,
-    deleteFromLibrary
+    getLibraryByUser,
+    removeFromLibrary
 };
