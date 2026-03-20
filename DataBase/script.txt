@@ -45,3 +45,7 @@ ADD CONSTRAINT unique_library_entry UNIQUE (book_id, user_id);
 
 ALTER TABLE history
 ADD CONSTRAINT unique_history_entry UNIQUE (book_id, user_id);
+
+21/03/26
+
+-- Changed to Bcrypt, need to delete everything from DataBase --
