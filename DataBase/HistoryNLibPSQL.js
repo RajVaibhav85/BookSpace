@@ -31,7 +31,7 @@ const getHistoryByUser = async (req,res) => {
 
 const addToHistory = async (req , res) => {
     const userId = req.session.userId;
-    if (!userId) return res.status(401).json({ error: 'Not logged in' });
+    if (!userId) return res.json({ success: true });
 
     const { mangaId } = req.body;
 

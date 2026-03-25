@@ -572,31 +572,50 @@ const content          = document.getElementById("content");
 const scrollTopBtn     = document.getElementById("scrollTopBtn");
 const scrollBottomBtn  = document.getElementById("scrollBottomBtn");
 
-// ── Get manga ID from URL ─────────────────────────────────────────────────
 const params  = new URLSearchParams(window.location.search);
 const mangaId = params.get('id');
 
-// ── Fetch manga details from your API ────────────────────────────────────
+// ── Utility: handle 401 from any authenticated fetch ─────────────────────
+// Clones the response so the body can still be consumed by the caller.
+async function checkAuth(res) {
+    if (res.status === 401) {
+        let data = {};
+        try { data = await res.clone().json(); } catch (_) {}
+        if (data.redirect === '/login') {
+            alert('Please login to use this feature');
+            window.location.href = '/login';
+        }
+        throw new Error('Unauthenticated');
+    }
+}
+
+// ── Load manga details ────────────────────────────────────────────────────
+// Route: GET /api/:id  →  apiController.getMangaById
 async function loadMangaDetails() {
     if (!mangaId) return;
     try {
         const res  = await fetch(`/api/${mangaId}`);
+        if (!res.ok) throw new Error(`API error ${res.status}`);
         const data = await res.json();
 
-        document.getElementById('cover-img').src          = data.cover || '';
-        document.getElementById('cover-img').alt          = data.title;
-        document.getElementById('manga-title').textContent = data.title;
+        document.getElementById('cover-img').src            = data.cover || '';
+        document.getElementById('cover-img').alt            = data.title;
+        document.getElementById('manga-title').textContent  = data.title;
         document.getElementById('manga-status').textContent = `Status: ${data.status || 'N/A'}`;
         document.getElementById('manga-genres').textContent = data.tags?.length
             ? `Genre: ${data.tags.slice(0, 3).join(', ')}`
             : '';
-        document.getElementById('manga-desc').textContent  = data.description || 'No description available.';
+        document.getElementById('manga-desc').textContent   = data.description || 'No description available.';
 
-        // Fetch chapter count from MangaDex
-        const chapRes  = await fetch(`https://api.mangadex.org/manga/${mangaId}/aggregate?translatedLanguage[]=en`);
+        // Direct MangaDex call — chapter aggregate (no backend route for this)
+        const chapRes  = await fetch(
+            `https://api.mangadex.org/manga/${mangaId}/aggregate?translatedLanguage[]=en`
+        );
         const chapData = await chapRes.json();
         const volumes  = Object.values(chapData.volumes || {});
-        chapterCount   = volumes.reduce((sum, v) => sum + Object.keys(v.chapters || {}).length, 0);
+        chapterCount   = volumes.reduce(
+            (sum, v) => sum + Object.keys(v.chapters || {}).length, 0
+        );
 
         document.getElementById('manga-chapters').textContent = `Chapters: ${chapterCount}`;
         loadChapterList();
@@ -606,7 +625,8 @@ async function loadMangaDetails() {
     }
 }
 
-// ── Fetch chapter images from MangaDex ───────────────────────────────────
+// ── Load chapter images ───────────────────────────────────────────────────
+// Uses direct MangaDex calls — your backend has no proxy route for images.
 async function loadChapter(index) {
     currentChapter = index;
     chapterIndicator.textContent = `Chapter ${index}`;
@@ -614,7 +634,7 @@ async function loadChapter(index) {
     mangaImages.innerHTML        = '<p style="color:white;text-align:center">Loading pages...</p>';
 
     try {
-        // 1. Get chapter list for this manga
+        // Direct MangaDex: chapter feed
         const listRes  = await fetch(
             `https://api.mangadex.org/manga/${mangaId}/feed?translatedLanguage[]=en&order[chapter]=asc&limit=500`
         );
@@ -626,7 +646,7 @@ async function loadChapter(index) {
             return;
         }
 
-        // 2. Get page image URLs
+        // Direct MangaDex: page image URLs
         const pagesRes  = await fetch(`https://api.mangadex.org/at-home/server/${chapter.id}`);
         const pagesData = await pagesRes.json();
         const baseUrl   = pagesData.baseUrl;
@@ -635,43 +655,46 @@ async function loadChapter(index) {
 
         mangaImages.innerHTML = '';
         pages.forEach(page => {
-            const img    = document.createElement('img');
-            img.src      = `${baseUrl}/data/${hash}/${page}`;
-            img.loading  = 'lazy';
+            const img   = document.createElement('img');
+            img.src     = `${baseUrl}/data/${hash}/${page}`;
+            img.loading = 'lazy';
             mangaImages.appendChild(img);
         });
 
         content.scrollTo({ top: 0, behavior: 'smooth' });
 
     } catch (err) {
-        mangaImages.innerHTML = `<p style="color:white;text-align:center">Failed to load chapter.</p>`;
+        mangaImages.innerHTML = '<p style="color:white;text-align:center">Failed to load chapter.</p>';
         console.error(err);
     }
 }
 
+// ── Build chapter list sidebar ────────────────────────────────────────────
 function loadChapterList() {
     chapterList.innerHTML = '';
     for (let i = chapterCount; i >= 1; i--) {
-        const a = document.createElement('a');
-        a.href      = '#';
-        a.className = 'chapter-item';
+        const a       = document.createElement('a');
+        a.href        = '#';
+        a.className   = 'chapter-item';
         a.textContent = `Chapter ${i}`;
         a.addEventListener('click', (e) => { e.preventDefault(); loadChapter(i); });
         chapterList.appendChild(a);
     }
 }
 
+// ── Download chapter as PDF ───────────────────────────────────────────────
+// Route: GET /api/chapter/:chapterId/download?title=...  →  apiController.downloadChapter
+// Requires auth — ensureAuthenticated returns 401 JSON with { redirect: '/login' }
 async function downloadChapter() {
-    const btn = document.getElementById('downloadBtn');
+    const btn   = document.getElementById('downloadBtn');
     const title = document.getElementById('manga-title').textContent.trim();
 
-    // Show loading state
     btn.querySelector('img').src = 'sandclock-icon.png';
-    btn.disabled = true;
+    btn.disabled      = true;
     btn.style.opacity = '0.5';
 
     try {
-        // 1. Get chapter ID from MangaDex
+        // Resolve current chapter ID via MangaDex
         const listRes  = await fetch(
             `https://api.mangadex.org/manga/${mangaId}/feed?translatedLanguage[]=en&order[chapter]=asc&limit=500`
         );
@@ -680,13 +703,18 @@ async function downloadChapter() {
 
         if (!chapter) { alert('Chapter not found!'); return; }
 
-        // 2. Call your backend to generate PDF
+        // Hit your backend download route
         const res = await fetch(
-            `/api/chapter/${chapter.id}/download?title=${encodeURIComponent(title)}`
+            `/api/chapter/${chapter.id}/download?title=${encodeURIComponent(title)}`,
+            { headers: { 'Accept': 'application/json' } }
         );
-        if (!res.ok) throw new Error((await res.json()).error || 'Server error');
 
-        // 3. Trigger download
+        await checkAuth(res);
+        if (!res.ok) {
+            const errData = await res.json();
+            throw new Error(errData.error || 'Server error');
+        }
+
         const blob = await res.blob();
         const a    = document.createElement('a');
         a.href     = URL.createObjectURL(blob);
@@ -695,59 +723,76 @@ async function downloadChapter() {
         URL.revokeObjectURL(a.href);
 
     } catch (err) {
-        alert('Download failed: ' + err.message);
+        if (err.message !== 'Unauthenticated') {
+            alert('Download failed: ' + err.message);
+        }
     } finally {
         btn.querySelector('img').src = 'download-icon.png';
-        btn.disabled = false;
+        btn.disabled      = false;
         btn.style.opacity = '1';
     }
 }
 
+// ── Bookmark chapter ──────────────────────────────────────────────────────
+// Route: POST /user/addToLibrary  →  userController.addToLibrary
+// Requires auth (ensureAuthenticated middleware on this route)
 async function bookmarkChapter() {
     const btn = document.getElementById('bookmarkBtn');
     btn.querySelector('img').src = 'sandclock-icon.png';
-    btn.disabled = true;
+    btn.disabled      = true;
     btn.style.opacity = '0.5';
 
     try {
         const res = await fetch('/user/addToLibrary', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            method:  'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept':       'application/json'
+            },
             body: JSON.stringify({ mangaId, chapter: currentChapter })
         });
 
+        await checkAuth(res);
+
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Server error');
 
-        btn.querySelector('img').src = 'bookmark-icon.png';
-        btn.disabled = false;
-        btn.style.opacity = '1';
-
     } catch (err) {
-        alert('Bookmark failed: ' + err.message);
+        if (err.message !== 'Unauthenticated') {
+            alert('Bookmark failed: ' + err.message);
+        }
+    } finally {
         btn.querySelector('img').src = 'bookmark-icon.png';
-        btn.disabled = false;
+        btn.disabled      = false;
         btn.style.opacity = '1';
     }
 }
 
-async function addToHistory(){
+// ── Add manga to history ──────────────────────────────────────────────────
+// Route: POST /user/addToHistory  →  userController.addToHistory
+// No ensureAuthenticated on this route in your router — fails silently if
+// controller needs session. Consider adding auth or guarding in controller.
+async function addToHistory() {
     try {
         const res = await fetch('/user/addToHistory', {
-            method: 'POST',
+            method:  'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ mangaId })
+            body:    JSON.stringify({ mangaId })
         });
+
+        // 401 here means user isn't logged in — just skip silently
+        if (res.status === 401) return;
 
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Server error');
+
     } catch (err) {
-        alert('Unable to add to history: ' + err.message);
+        console.warn('Unable to add to history:', err.message);
     }
 }
 
-// ── Feedback modal ────────────────────────────────────────────────────────
-const feedbackOverlay    = document.getElementById('feedback-overlay');
+// ── Feedback modal helpers ────────────────────────────────────────────────
+const feedbackOverlay      = document.getElementById('feedback-overlay');
 const feedbackCommentInput = document.getElementById('feedback-comment-input');
 
 function openFeedbackModal() {
@@ -760,25 +805,30 @@ function closeFeedbackModal() {
     document.querySelectorAll('#star-selector input').forEach(r => r.checked = false);
 }
 
+// ── Submit feedback ───────────────────────────────────────────────────────
+// Route: POST /book/addFeedback  →  bookController.addFeedback
+// Requires auth (ensureAuthenticated middleware on this route)
 async function submitFeedback() {
     const rating  = document.querySelector('#star-selector input:checked')?.value;
     const comment = feedbackCommentInput.value.trim();
 
-    if (!rating) {
-        alert('Please select a star rating.');
-        return;
-    }
+    if (!rating) { alert('Please select a star rating.'); return; }
 
-    const submitBtn = document.getElementById('modal-submit');
+    const submitBtn       = document.getElementById('modal-submit');
     submitBtn.textContent = 'Submitting...';
     submitBtn.disabled    = true;
 
     try {
         const res = await fetch('/book/addFeedback', {
             method:  'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body:    JSON.stringify({ mangaId, rating: parseInt(rating), comment })
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept':       'application/json'
+            },
+            body: JSON.stringify({ mangaId, rating: parseInt(rating), comment })
         });
+
+        await checkAuth(res);
 
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Server error');
@@ -787,16 +837,22 @@ async function submitFeedback() {
         loadFeedback();
 
     } catch (err) {
-        alert('Failed to submit: ' + err.message);
+        if (err.message !== 'Unauthenticated') {
+            alert('Failed to submit: ' + err.message);
+        }
     } finally {
         submitBtn.textContent = 'Submit';
         submitBtn.disabled    = false;
     }
 }
 
+// ── Load all feedback for this manga ─────────────────────────────────────
+// Route: GET /book/getFeedbackByBook/:bookid  →  bookController.getFeedbackByBook
+// No auth required on this route
 async function loadFeedback() {
     try {
         const res  = await fetch(`/book/getFeedbackByBook/${mangaId}`);
+        if (!res.ok) throw new Error(`API error ${res.status}`);
         const data = await res.json();
 
         const section = document.getElementById('feedback-section');
@@ -813,7 +869,7 @@ async function loadFeedback() {
 
         section.style.display = 'block';
 
-        const avg = (data.reduce((sum, f) => sum + f.rating, 0) / data.length).toFixed(1);
+        const avg     = (data.reduce((sum, f) => sum + f.rating, 0) / data.length).toFixed(1);
         avgEl.textContent   = `★ ${avg}`;
         totalEl.textContent = `${data.length} review${data.length > 1 ? 's' : ''}`;
 
@@ -821,22 +877,18 @@ async function loadFeedback() {
             const stars = '★'.repeat(f.rating) + '☆'.repeat(5 - f.rating);
             const time  = f.time
                 ? new Date(f.time).toLocaleString('en-IN', {
-                    day:    '2-digit',
-                    month:  'short',
-                    year:   'numeric',
-                    hour:   '2-digit',
-                    minute: '2-digit',
-                    hour12: true
-                })
+                    day: '2-digit', month: 'short', year: 'numeric',
+                    hour: '2-digit', minute: '2-digit', hour12: true
+                  })
                 : '';
 
-            const card = document.createElement('div');
+            const card     = document.createElement('div');
             card.className = 'feedback-card';
             card.innerHTML = `
                 <span class="username">${f.username}</span>
                 <span class="stars">${stars}</span>
                 ${f.comment ? `<p class="comment">${f.comment}</p>` : ''}
-                ${time ? `<span class="feedback-time">${time}</span>` : ''}
+                ${time     ? `<span class="feedback-time">${time}</span>` : ''}
             `;
             list.appendChild(card);
         });
@@ -846,38 +898,41 @@ async function loadFeedback() {
     }
 }
 
-
+// ── Event listeners ───────────────────────────────────────────────────────
 document.getElementById('submitFeedbackBtn').addEventListener('click', openFeedbackModal);
 document.getElementById('modal-cancel').addEventListener('click', closeFeedbackModal);
 document.getElementById('modal-submit').addEventListener('click', submitFeedback);
 
-// close on backdrop click
 feedbackOverlay.addEventListener('click', (e) => {
     if (e.target === feedbackOverlay) closeFeedbackModal();
 });
 
 document.getElementById('bookmarkBtn').addEventListener('click', bookmarkChapter);
-
 document.getElementById('downloadBtn').addEventListener('click', downloadChapter);
 
-document.getElementById("nextChapter").addEventListener("click", () => {
+document.getElementById('nextChapter').addEventListener('click', () => {
     if (currentChapter < chapterCount) loadChapter(++currentChapter);
 });
-document.getElementById("prevChapter").addEventListener("click", () => {
+document.getElementById('prevChapter').addEventListener('click', () => {
     if (currentChapter > 1) loadChapter(--currentChapter);
 });
 
-scrollTopBtn.addEventListener("click", () => content.scrollTo({ top: 0, behavior: "smooth" }));
-scrollBottomBtn.addEventListener("click", () => content.scrollTo({ top: content.scrollHeight, behavior: "smooth" }));
+scrollTopBtn.addEventListener('click', () =>
+    content.scrollTo({ top: 0, behavior: 'smooth' })
+);
+scrollBottomBtn.addEventListener('click', () =>
+    content.scrollTo({ top: content.scrollHeight, behavior: 'smooth' })
+);
 
-content.addEventListener("scroll", () => {
-    if (readerSection.style.display === "none") return;
+content.addEventListener('scroll', () => {
+    if (readerSection.style.display === 'none') return;
     const rect      = mangaImages.getBoundingClientRect();
     const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
-    readerBtns.style.display = isVisible ? "flex" : "none";
+    readerBtns.style.display = isVisible ? 'flex' : 'none';
 });
 
-function init(){
+// ── Init ──────────────────────────────────────────────────────────────────
+function init() {
     loadMangaDetails();
     addToHistory();
     loadFeedback();
