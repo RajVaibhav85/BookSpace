@@ -158,7 +158,8 @@
         /*  Usage template
             const params = new URLSearchParams({
                 code: '401',
-                message : "Authentication failed. Invalid credentials."
+                title: "Unauthorised",      //optional
+                message : "Authentication failed. Invalid credentials."  //optional
             }).toString();
             res.status(401).redirect(`/errorpage.html?${params}`)  
         */

@@ -56,8 +56,8 @@
         .dropdown-menu li { padding: 8px 15px; }
         .dropdown-menu a { font-size: 16px; display: block; }
         .dropdown:hover .dropdown-menu { display: block; }
-        
-        
+
+        @keyframes fadeUp { from { opacity: 0; transform: translateX(-50%) translateY(18px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
         /* Content: wrapper for all things */
         
         #content {
@@ -600,7 +600,7 @@ async function checkAuth(res) {
         let data = {};
         try { data = await res.clone().json(); } catch (_) {}
         if (data.redirect === '/login') {
-            alert('Please login to use this feature');
+            await showToast('Please login to use this feature', true);
             window.location.href = '/login';
         }
         throw new Error('Unauthenticated');
@@ -719,7 +719,7 @@ async function downloadChapter() {
         const listData = await listRes.json();
         const chapter  = listData.data.find(c => c.attributes.chapter == currentChapter);
 
-        if (!chapter) { alert('Chapter not found!'); return; }
+        if (!chapter) { await showToast('Chapter not found!', true); return; }
 
         // Hit your backend download route
         const res = await fetch(
@@ -742,7 +742,7 @@ async function downloadChapter() {
 
     } catch (err) {
         if (err.message !== 'Unauthenticated') {
-            alert('Download failed: ' + err.message);
+            await showToast('Download failed: ' + err.message, true);
         }
     } finally {
         btn.querySelector('img').src = 'download-icon.png';
@@ -777,7 +777,7 @@ async function bookmarkChapter() {
 
     } catch (err) {
         if (err.message !== 'Unauthenticated') {
-            alert('Bookmark failed: ' + err.message);
+            await showToast('Bookmark failed: ' + err.message, true);
         }
     } finally {
         btn.querySelector('img').src = 'bookmark-icon.png';
@@ -830,7 +830,7 @@ async function submitFeedback() {
     const rating  = document.querySelector('#star-selector input:checked')?.value;
     const comment = feedbackCommentInput.value.trim();
 
-    if (!rating) { alert('Please select a star rating.'); return; }
+    if (!rating) { await showToast('Please select a star rating.',true); return; }
 
     const submitBtn       = document.getElementById('modal-submit');
     submitBtn.textContent = 'Submitting...';
@@ -856,7 +856,7 @@ async function submitFeedback() {
 
     } catch (err) {
         if (err.message !== 'Unauthenticated') {
-            alert('Failed to submit: ' + err.message);
+            await showToast('Failed to submit: ' + err.message, true);
         }
     } finally {
         submitBtn.textContent = 'Submit';
@@ -915,6 +915,30 @@ async function loadFeedback() {
         console.error('Failed to load feedback:', err);
     }
 }
+
+// ── Show Toast ───────────────────────────────────────────────────────
+async function showToast(message, isError = false) {
+        const existing = document.getElementById('toast');
+        if (existing) existing.remove();
+        const toast = document.createElement('div');
+        toast.id = 'toast';
+        toast.textContent = message;
+        toast.style.cssText = `
+            position:fixed; bottom:32px; left:50%; transform:translateX(-50%);
+            padding:12px 28px; border-radius:40px; font-size:14px; font-weight:700;
+            z-index:9999; animation:fadeUp 0.3s ease both; color:white;
+            background:${isError
+                ? 'rgba(220,50,50,0.9)'
+                : 'linear-gradient(90deg,#b57bee,#5b8dee)'};
+            backdrop-filter:blur(10px);
+            border:1px solid rgba(255,255,255,0.15);
+            box-shadow:0 8px 32px rgba(0,0,0,0.4);
+            white-space:nowrap;
+        `;
+        document.body.appendChild(toast);
+        await new Promise(resolve => setTimeout(resolve, 2500));
+        toast.remove();
+    }
 
 // ── Event listeners ───────────────────────────────────────────────────────
 document.getElementById('submitFeedbackBtn').addEventListener('click', openFeedbackModal);

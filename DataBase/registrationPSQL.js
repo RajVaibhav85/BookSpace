@@ -50,7 +50,11 @@ async function loginUser(req, res) {
         res.redirect('/');
     } catch (err) {
         console.error(err);
-        res.status(500).send("Server error");
+        const params = new URLSearchParams({
+            code: '500',
+            message: `Server Error: ${err.message}`
+        }).toString();
+        res.status(500).redirect(`/errorpage.html?${params}`);
     }
 }
 
@@ -80,7 +84,11 @@ const getUserDetails = async (req, res) => {
         res.json(result.rows[0]);
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: 'Server error' });
+        const params = new URLSearchParams({
+            code: '500',
+            message: `Server Error: ${err.message}`
+        }).toString();
+        res.status(500).redirect(`/errorpage.html?${params}`);
     }
 };
 
@@ -144,7 +152,11 @@ const updatePassword = async (req, res) => {
         res.json({ success: true });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: 'Server error.' });
+        const params = new URLSearchParams({
+            code: '500',
+            message: `Server Error: ${err.message}`
+        }).toString();
+        res.status(500).redirect(`/errorpage.html?${params}`);
     }
 };
 

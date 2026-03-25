@@ -27,6 +27,15 @@ const getAboutPage = (req, res) => {
   res.sendFile(path.join(viewsPath2, "aboutpage.html"));
 };
 
+const getBooksPage = (req, res) => {
+  const params = new URLSearchParams({
+    code: '503',
+    title: "Page Under Construction",
+    message : "Page under construction. Please check back later."
+  }).toString();
+  res.status(503).redirect(`/errorpage.html?${params}`)
+}
+
 
 
 
@@ -53,6 +62,7 @@ module.exports = {
   getReaderPage,
   getProfilePage,
   getAboutPage,
+  getBooksPage,
   getMangaPage,
   getManhwaPage,
   getComicsPage,
