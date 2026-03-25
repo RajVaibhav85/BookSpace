@@ -166,9 +166,6 @@ const deleteAccount = async (req, res) => {
         return res.status(401).json({ error: 'Not logged in' });
     }
     try {
-        await pool.query('DELETE FROM history WHERE user_id = $1', [userId]);
-        await pool.query('DELETE FROM library WHERE user_id = $1', [userId]);
-        await pool.query('DELETE FROM feedback WHERE user_id = $1', [userId]);
         await pool.query('DELETE FROM registration WHERE user_id = $1', [userId]);
         req.session.destroy(err => {});
         res.json({ success: true, message: 'Account deleted successfully.' });
