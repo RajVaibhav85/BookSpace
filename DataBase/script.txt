@@ -1,4 +1,7 @@
-DROP TABLE registration ;
+
+CREATE DATABASE bookspace;
+\c bookspace
+
 CREATE TABLE registration (
     user_id SERIAL PRIMARY KEY,
     username TEXT NOT NULL UNIQUE,
@@ -32,13 +35,11 @@ CREATE TABLE library (
     joined_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-16/3/26
 
 ALTER TABLE feedback
 ADD CONSTRAINT unique_feedback UNIQUE(user_id, bookid);
 
 
-19/03/26
 
 ALTER TABLE library
 ADD CONSTRAINT unique_library_entry UNIQUE (book_id, user_id);
@@ -46,6 +47,5 @@ ADD CONSTRAINT unique_library_entry UNIQUE (book_id, user_id);
 ALTER TABLE history
 ADD CONSTRAINT unique_history_entry UNIQUE (book_id, user_id);
 
-21/03/26
 
 -- Changed to Bcrypt, need to delete everything from DataBase --
