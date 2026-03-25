@@ -23,9 +23,9 @@
         nav a:hover { opacity: 0.7; }
 
         /* ── Shared dropdown styles (navbar + filter) ── */
-        .dropdown { position: relative; }
+        .dropdowns { position: relative; }
 
-        .dropdown-menu {
+        .dropdown-menus {
             position: absolute;
             top: 100%;
             left: 50%;
@@ -40,29 +40,29 @@
             display: none;
             z-index: 999;
         }
-        .dropdown-menu li { padding: 6px 10px; white-space: nowrap; cursor: pointer; border-radius: 4px; transition: 0.2s; }
-        .dropdown-menu li:hover { background: rgba(255,255,255,0.1); }
-        .dropdown-menu li.active { background: rgba(255,255,255,0.15); }
-        .dropdown-menu a { font-size: 14px; display: block; text-decoration: none; color: white; }
-        .dropdown:hover .dropdown-menu { display: block; }
+        .dropdown-menus li { padding: 6px 10px; white-space: nowrap; cursor: pointer; border-radius: 4px; transition: 0.2s; }
+        .dropdown-menus li:hover { background: rgba(255,255,255,0.1); }
+        .dropdown-menus li.active { background: rgba(255,255,255,0.15); }
+        .dropdown-menus a { font-size: 14px; display: block; text-decoration: none; color: white; }
+        .dropdowns:hover .dropdown-menus { display: block; }
 
         /* navbar genre is a 4-col grid */
-        .dropdown-menu.genre-nav {
+        .dropdown-menus.genre-nav {
             display: none;
             grid-template-columns: repeat(4, 1fr);
             gap: 2px 8px;
             min-width: 520px;
         }
-        .dropdown:hover .dropdown-menu.genre-nav { display: grid; }
+        .dropdowns:hover .dropdown-menus.genre-nav { display: grid; }
 
         /* filter genre is also a 4-col grid */
-        .dropdown-menu.genre-filter {
+        .dropdown-menus.genre-filter {
             display: none;
             grid-template-columns: repeat(4, 1fr);
             gap: 2px 8px;
             min-width: 520px;
         }
-        .dropdown:hover .dropdown-menu.genre-filter { display: grid; }
+        .dropdowns:hover .dropdown-menus.genre-filter { display: grid; }
 
         /* ── Filter bar ── */
         #filter-bar { display: flex; align-items: center; justify-content: center; gap: 16px; padding: 20px 20px 0; }
@@ -143,9 +143,11 @@
             #filter-bar { flex-wrap: wrap; }
         }
     </style>
+    <link rel="stylesheet" href="CSS/topbar.css">
 </head>
 <body>
-    <div id="top-bar">
+    <div id="content">
+          <div id="top-bar">
         <div>
             <p><a href="/" style="text-decoration: none; color: white;">BookSpace</a></p>
         </div>
@@ -188,8 +190,6 @@
             </ul>
         </nav>
     </div>
-
-    <div id="content">
         <div class="search-container-wrapper">
             <div class="search-container">
                 <button id="search-btn"><img src="/search-icon.png" alt="Search"></button>
@@ -231,9 +231,9 @@
                 </ul>
             </div>
 
-            <div class="dropdown">
+            <div class="dropdowns">
                 <button class="filter-btn" id="status-btn">Status: All ▾</button>
-                <ul class="dropdown-menu">
+                <ul class="dropdown-menus">
                     <li data-value="">All</li>
                     <li data-value="ongoing">Ongoing</li>
                     <li data-value="completed">Completed</li>

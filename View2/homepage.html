@@ -13,6 +13,7 @@
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
+            overflow: hidden;
         }
 
         body{
@@ -22,16 +23,6 @@
             min-height: 100vh;
         }
 
-        #top-bar{
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            position: relative;
-            top: 0;
-            z-index: 100;
-            background: transparent;
-        }
 
         #top-bar p{ margin: 0; font-size: 28px; }
 
@@ -139,6 +130,7 @@
             .card { width: calc(50% - 24px); box-sizing: border-box; }
         }
     </style>
+    <link rel="stylesheet" href="CSS/topbar.css">
 </head>
 <body>
     <div id="top-bar">
