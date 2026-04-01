@@ -43,6 +43,7 @@ app.use(express.json());
 
 const registerRoutes = require('../Control/Routes/userRoutes');
 app.use("/user", registerRoutes);
+
 const apiRoutes = require('../Control/Routes/apiRoutes');
 app.use("/api",apiRoutes);
 const bookRoutes = require('../Control/Routes/bookRoutes');
