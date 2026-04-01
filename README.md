@@ -17,17 +17,16 @@ BookSpace is a full-stack web application built with Node.js and Express that pr
 ---
 
 ## Features
-
--  Web-based book reading with PDF rendering
+-  Clean and responsive UI built with HTML, CSS, and JavaScript
 -  User authentication (register & login) with password hashing via bcrypt
 -  Session-based user management using express-session
--  Organized book browsing and management through history and user library 
--  PostgreSQL database integration for persistent storage
--  Clean and responsive UI built with HTML, CSS, and JavaScript
 -  Search and filter books by title, author, or genre
+-  Web-based book reading with PDF rendering
+-  PostgreSQL database integration for persistent storage
 -  Bookmarking and reading progress tracking
 -  User reviews and ratings for books
-
+-  Organized book browsing and management through history and user library
+-  Dedicated user profile to manage user information
 ---
 
 ## Tech Stack
@@ -226,8 +225,8 @@ This project is licensed under the **ISC License**. See the [LICENSE](./LICENSE)
 
 ## Authors / Contributors
 
-- **Raj Vaibhav** — [@RajVaibhav85](https://github.com/RajVaibhav85)
-- **Hemanth** — [@Hemanth-Zero](https://github.com/Hemanth-Zero)
+- **K Sree Vaibhav** — [@RajVaibhav85](https://github.com/RajVaibhav85)
+- **C Hemanth Sagar** — [@Hemanth-Zero](https://github.com/Hemanth-Zero)
 
 ---
 
@@ -253,4 +252,4 @@ If you have questions, suggestions, or just want to say hi:
 ## Note
 This project is developed for educational purposes under the guidance of Gireesh Sir.
 
-<p align="center">Made  by  K Sree Vaibhav , C Hemanth Sagar </p>
+<p align="center">Made  by  C Hemanth Sagar  , K Sree Vaibhav </p>
