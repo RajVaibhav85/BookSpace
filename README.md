@@ -225,8 +225,8 @@ This project is licensed under the **ISC License**. See the [LICENSE](./LICENSE)
 
 ## Authors / Contributors
 
-- **K Sree Vaibhav** — [@RajVaibhav85](https://github.com/RajVaibhav85)
 - **C Hemanth Sagar** — [@Hemanth-Zero](https://github.com/Hemanth-Zero)
+- **K Sree Vaibhav** — [@RajVaibhav85](https://github.com/RajVaibhav85)
 
 ---
 
