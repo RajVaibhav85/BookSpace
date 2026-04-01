@@ -2,6 +2,8 @@ const express = require("express");
 const path = require("path");
 const session = require("express-session");
 
+require('dotenv').config({ path: '../.env' });
+
 const app = express();
 const PORT = 3000;
 
@@ -22,7 +24,6 @@ app.use("/", pageRoutes);
 
 //--------------------------------- DATABASE SETUP-------------------------
 const { Pool } = require('pg');
-require('dotenv').config();
 
 const pool = new Pool({
   user: process.env.DB_USER,
