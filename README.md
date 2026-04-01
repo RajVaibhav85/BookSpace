@@ -138,11 +138,11 @@ Create a `.env` file in the root directory and add the following:
 PORT=3000
 
 # Database
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=bookspace
 DB_USER=your_db_username
+DB_HOST=localhost
+DB_NAME=bookspace
 DB_PASSWORD=your_db_password
+DB_PORT=5432
 
 # Session
 SESSION_SECRET=your_super_secret_key
